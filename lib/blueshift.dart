@@ -133,10 +133,10 @@ class Blueshift {
   /// Return the email address stored inside the user info.
   ///
   /// ```dart
-  /// String? email = await Blueshift.getUserInfoEmailId;
+  /// String email = await Blueshift.getUserInfoEmailId;
   /// ```
-  static Future<String?> get getUserInfoEmailId async {
-    final String? emailId = await _methodChannel.invokeMethod(
+  static Future<String> get getUserInfoEmailId async {
+    final String emailId = await _methodChannel.invokeMethod(
       'getUserInfoEmailId',
     );
     return emailId;
@@ -157,10 +157,10 @@ class Blueshift {
   /// Return the customer id stored inside the user info.
   ///
   /// ```dart
-  /// String? customerId = await Blueshift.getUserInfoCustomerId;
+  /// String customerId = await Blueshift.getUserInfoCustomerId;
   /// ```
-  static Future<String?> get getUserInfoCustomerId async {
-    final String? customerId = await _methodChannel.invokeMethod(
+  static Future<String> get getUserInfoCustomerId async {
+    final String customerId = await _methodChannel.invokeMethod(
       'getUserInfoCustomerId',
     );
     return customerId;
@@ -206,10 +206,10 @@ class Blueshift {
   /// Return the first name stored inside the user info.
   ///
   /// ```dart
-  /// String? firstName = await Blueshift.getUserInfoFirstName;
+  /// String firstName = await Blueshift.getUserInfoFirstName;
   /// ```
-  static Future<String?> get getUserInfoFirstName async {
-    final String? firstName = await _methodChannel.invokeMethod(
+  static Future<String> get getUserInfoFirstName async {
+    final String firstName = await _methodChannel.invokeMethod(
       'getUserInfoFirstName',
     );
     return firstName;
@@ -230,10 +230,10 @@ class Blueshift {
   /// Return the last name stored inside the user info.
   ///
   /// ```dart
-  /// String? lastName = await Blueshift.getUserInfoLastName;
+  /// String lastName = await Blueshift.getUserInfoLastName;
   /// ```
-  static Future<String?> get getUserInfoLastName async {
-    final String? lastName = await _methodChannel.invokeMethod(
+  static Future<String> get getUserInfoLastName async {
+    final String lastName = await _methodChannel.invokeMethod(
       'getUserInfoLastName',
     );
     return lastName;
@@ -408,10 +408,10 @@ class Blueshift {
   /// Return the current device id being used.
   ///
   /// ```dart
-  /// String? deviceId = await Blueshift.getCurrentDeviceId;
+  /// String deviceId = await Blueshift.getCurrentDeviceId;
   /// ```
-  static Future<String?> get getCurrentDeviceId async {
-    final String? deviceId = await _methodChannel.invokeMethod(
+  static Future<String> get getCurrentDeviceId async {
+    final String deviceId = await _methodChannel.invokeMethod(
       'getCurrentDeviceId',
     );
     return deviceId;

@@ -303,9 +303,11 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
      * @param result cached deep link URL (if available)
      */
     private void getInitialUrl(Result result) {
-        if (cachedUrl != null && result != null) {
+        if (cachedUrl != null) {
             result.success(cachedUrl);
             cachedUrl = null;
+        } else {
+            result.success("");
         }
     }
 
@@ -442,19 +444,23 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
     }
 
     private void getUserInfoFirstName(Result result) {
-        result.success(UserInfo.getInstance(appContext).getFirstname());
+        String firstName = UserInfo.getInstance(appContext).getFirstname();
+        result.success(firstName != null ? firstName : "");
     }
 
     private void getUserInfoLastName(Result result) {
-        result.success(UserInfo.getInstance(appContext).getLastname());
+        String lastName = UserInfo.getInstance(appContext).getLastname();
+        result.success(lastName != null ? lastName : "");
     }
 
     private void getUserInfoEmailId(Result result) {
-        result.success(UserInfo.getInstance(appContext).getEmail());
+        String email = UserInfo.getInstance(appContext).getEmail();
+        result.success(email != null ? email : "");
     }
 
     private void getUserInfoCustomerId(Result result) {
-        result.success(UserInfo.getInstance(appContext).getRetailerCustomerId());
+        String customerId = UserInfo.getInstance(appContext).getRetailerCustomerId();
+        result.success(customerId != null ? customerId : "");
     }
 
     private void getUserInfoExtras(Result result) {
@@ -462,7 +468,8 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
     }
 
     private void getCurrentDeviceId(Result result) {
-        result.success(DeviceUtils.getDeviceId(appContext));
+        String deviceId = DeviceUtils.getDeviceId(appContext);
+        result.success(deviceId != null ? deviceId : "");
     }
 
     private void liveContentByEmailId(MethodCall methodCall, Result result) {
