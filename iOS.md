@@ -19,11 +19,11 @@ After adding the **Push Notifications** capability and enabling **Remote notific
 
 We have divided the SDK integration into 3 types based on the integration type.
 
-​	***[a. Automatic Integration](#a. Automatic-Integration)*** - Blueshift integration when you have not integrated Firebase in your project.
+a. [Automatic Integration](#a-automatic-integration) - Blueshift integration when you have not integrated Firebase in your project.
 
-​	***[b. Auto Integration along with Firebase SDK](#b. Auto-Integration-along-with-Firebase-SDK)*** - Blueshift integration when you have already integrated Firebase in your project.
+b. [Auto Integration along with Firebase SDK](#b-auto-integration-along-with-firebase-sdk) - Blueshift integration when you have already integrated Firebase in your project.
 
-​	***[c. Manual Integration](#c. manual-integration)*** - Manual integration for customized implementation. 
+c. [Manual Integration](#c-manual-integration) - Manual integration for customized implementation. 
 
 ### a. Automatic Integration
 
@@ -128,13 +128,13 @@ The other optional SDK config values which can be used to configure the SDK are:
 ```
 You can find more information on the SDK config values [here](https://developer.blueshift.com/docs/include-configure-initialize-the-ios-sdk-in-the-app#sdk-config-values). 
 
-The SDK setup with automatic integration completes over here. Using this setup you will be able to send events to Blueshift, send basic push notifications (title+content) to the iOS device. Also, you will get the push notification deep links in your Flutter app using the [Deep links Event Listener]().
+The SDK setup with automatic integration completes over here. Using this setup you will be able to send events to Blueshift, send basic push notifications (title+content) to the iOS device. Also, you will get the push notification deep links in your Flutter app using the [Deep links Event Listener](README.md#deep-links-event-listener).
 
 Refer [section](#2-enable-rich-push-notifications) to enable Rich push notifications, [section](#3-enable-in-app-messages) to enable in-app notifications and [section](#4-enable-blueshift-email-deep-links) to enable Blueshift email deep links. 
 
 
 ### b. Auto Integration along with Firebase SDK
-As Blueshift and Firebase both are responsible for handling the push notifications and both provide the automatic integration feature, you can not use Blueshift Auto integration when you have integrated Firebase SDK with auto integration(method swizzling). You can follow the above-mentioned steps from ***[a. Automatic Integration](#a. Automatic-Integration)***  to do the Blueshift SDK integration, and after that, disable the Firebase auto integration and integrate manually by following the below steps.
+As Blueshift and Firebase both are responsible for handling the push notifications and both provide the automatic integration feature, you can not use Blueshift Auto integration when you have integrated Firebase SDK with auto integration(method swizzling). You can follow the above-mentioned steps from [a. Automatic Integration](#a-automatic-integration) to do the Blueshift SDK integration, and after that, disable the Firebase auto integration and integrate manually by following the below steps.
 
 You will need to disable the Method Swizzling for Firebase first. To disable it, add `FirebaseAppDelegateProxyEnabled` key with type `Boolean` and value `NO` in `info.plist` from your app's target.
 
@@ -147,12 +147,12 @@ As we have disabled the Firebase method swizzling, we need to explicitly set the
     [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 ```
-Here, the Blueshift Auto integration setup along with the Firebase completes. Using this setup you will be able to send events to Blueshift and send basic push notifications (title+content) to the iOS device. Also, you will get the push notification deep links in your Flutter app using the [Deep links Event Listener]().
+Here, the Blueshift Auto integration setup along with the Firebase completes. Using this setup you will be able to send events to Blueshift and send basic push notifications (title+content) to the iOS device. Also, you will get the push notification deep links in your Flutter app using the [Deep links Event Listener](README.md#deep-links-event-listener).
 
 Refer [section](#2-enable-rich-push-notifications) to enable Rich push notifications, [section](#3-enable-in-app-messages) to enable in-app notifications and [section](#4-enable-blueshift-email-deep-links) to enable Blueshift email deep links.  
 
 ### c. Manual Integration
-In case, none of the above integration types works for you, you can integrate the Blueshift plugin manually. You will need to follow the steps mentioned in the ***[a. Automatic Integration](#a. Automatic-Integration)***  section to create the Blueshift **Config** and then initialize the Plugin by passing `autoIntegrate` as `NO`. 
+In case, none of the above integration types works for you, you can integrate the Blueshift plugin manually. You will need to follow the steps mentioned in the [a. Automatic Integration](#a-automatic-integration) section to create the Blueshift **Config** and then initialize the Plugin by passing `autoIntegrate` as `NO`. 
 
 ```objective-c
   // Create Blueshift config and then initialize the Plugin with `autoIntegrate` as `NO`.
@@ -211,7 +211,7 @@ Add the following to the `AppDelegate.m` file of your app’s Xcode project to s
 
 ```
 #### Handle the push and in-app deep links manually
-The Blueshift iOS SDK supports deep links on push notifications and in-app messages. If a deep-link URL is present in the push or in-app message payload, the Blueshift SDK triggers `AppDelegate` class `application:openURL:options:` method on notification click/tap action and delivers the deep link there. If the URL is from Blueshift, then let the plugin manager send it to Flutter using the [Deep links Event Listener](). Add the below code to the `AppDelegate.m` file.
+The Blueshift iOS SDK supports deep links on push notifications and in-app messages. If a deep-link URL is present in the push or in-app message payload, the Blueshift SDK triggers `AppDelegate` class `application:openURL:options:` method on notification click/tap action and delivers the deep link there. If the URL is from Blueshift, then let the plugin manager send it to Flutter using the [Deep links Event Listener](README.md#deep-links-event-listener). Add the below code to the `AppDelegate.m` file.
 
 ```objective-c
 /// Override the open url method for handling deep links
@@ -312,7 +312,7 @@ Now set the `blueshiftUniversalLinksDelegate` config variable to `self` to enabl
 ```
 
 ### Automatic Integration 
-If you have integrated the plugin using the automatic integration, your setup is completed here. You will receive the deep link on the Flutter using the [Deep links Event Listener]().
+If you have integrated the plugin using the automatic integration, your setup is completed here. You will receive the deep link on the Flutter using the [Deep links Event Listener](README.md#deep-links-event-listener).
 
 ### Manual Integration
 If you have opted for Manual integration, you will need to follow the below steps to integrate the Blueshift Plugin.
@@ -353,6 +353,8 @@ Now, implement the `BlueshiftUniversalLinksDelegate` delegate methods to get the
     }
 }
 ```
+
+The manual setup for Blueshift email deep links completes here. You will receive the deep link on the Flutter using the [Deep links Event Listener](README.md#deep-links-event-listener).
 
 Refer to the Troubleshooting section of [this document](https://developer.blueshift.com/docs/integrate-blueshifts-universal-links-ios#troubleshooting) to 
 troubleshoot the Universal links integration issues.
