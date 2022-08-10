@@ -1,0 +1,227 @@
+{
+  "project_info": {
+    "project_number": "62519831960",
+    "firebase_url": "https://blueshift-reads-app.firebaseio.com",
+    "project_id": "blueshift-reads-app",
+    "storage_bucket": "blueshift-reads-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:e2d1b18c1a370d59028fed",
+        "android_client_info": {
+          "package_name": "com.blueshift.cordova.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:1293ed3559a15dcf028fed",
+        "android_client_info": {
+          "package_name": "com.blueshift.mp_sample_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:2b52cb40476cf928028fed",
+        "android_client_info": {
+          "package_name": "com.blueshift.mpexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:92b0e8190f510831",
+        "android_client_info": {
+          "package_name": "com.blueshift.reads"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:fef55633218a6e76028fed",
+        "android_client_info": {
+          "package_name": "com.blueshift.reads.red"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62519831960:android:5d5048f7feda788f028fed",
+        "android_client_info": {
+          "package_name": "com.sampleapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62519831960-okklj2c51opmmaj1n1u1i7o83fvdqtom.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62519831960-38fvtbtrkq3spntj3h89g8153es3oe2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blueshift.reads.red"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
