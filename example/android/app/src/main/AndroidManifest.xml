@@ -1,0 +1,134 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.blueshift.flutter.blueshift_flutter_plugin_example">
+
+    <application
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:label="blueshift_flutter_plugin_example">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="universallinks.blueshiftreads.com"
+                    android:pathPrefix="/track"
+                    android:scheme="https" />
+                <data
+                    android:host="universallinks.blueshiftreads.com"
+                    android:pathPrefix="/z"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="readsapp"
+                    android:pathPrefix="/path"
+                    android:scheme="blueshift" />
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <meta-data
+            android:name="com.blueshift.config.API_KEY"
+            android:value="BLUESHIFT_EVENT_API_KEY" />
+        <meta-data
+            android:name="com.blueshift.config.REGION"
+            android:value="US" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_PUSH"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_IN_APP"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_IN_APP_JS"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.IN_APP_INTERVAL"
+            android:value="300" />
+        <meta-data
+            android:name="com.blueshift.config.BATCH_INTERVAL"
+            android:value="54000" />
+        <meta-data
+            android:name="com.blueshift.config.APP_ICON"
+            android:resource="@mipmap/ic_launcher" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_ICON_SMALL"
+            android:resource="@mipmap/ic_launcher" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_ICON_BIG"
+            android:resource="@mipmap/ic_launcher" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_ICON_COLOR"
+            android:resource="@color/notificationColor" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_ID"
+            android:value="DefaultChannelId" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_NAME"
+            android:value="DefaultChannelName" />
+        <meta-data
+            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_DESCRIPTION"
+            android:value="DefaultChannelDescription" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_PUSH_APP_LINKS"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_IN_APP_MANUAL_TRIGGER"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_IN_APP_BACKGROUND_FETCH"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_AUTO_APP_OPEN"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.AUTO_APP_OPEN_INTERVAL"
+            android:value="54000" />
+        <meta-data
+            android:name="com.blueshift.config.JOB_ID_BULK_EVENT"
+            android:value="911" />
+        <meta-data
+            android:name="com.blueshift.config.JOB_ID_NETWORK_CHANGE"
+            android:value="911" />
+        <meta-data
+            android:name="com.blueshift.config.DEVICE_ID_SOURCE"
+            android:value="INSTANCE_ID" />
+        <meta-data
+            android:name="com.blueshift.config.CUSTOM_DEVICE_ID"
+            android:value="YOUR_CUSTOM_DEVICE_ID" />
+    </application>
+</manifest>
