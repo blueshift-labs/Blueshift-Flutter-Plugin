@@ -456,22 +456,22 @@ class Blueshift {
   ///
   /// ```dart
   /// Future<void> _handleRemoteMessage(RemoteMessage message) async {
-  //   Blueshift.handlePushNotification(message.data);
-  // }
-  //
-  // Future<void> main() async {
-  //   WidgetsFlutterBinding.ensureInitialized();
-  //
-  //   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  //   // https://github.com/firebase/flutterfire/issues/6011
-  //   await FirebaseMessaging.instance.getToken();
-  //   // listen for notification while the app is in foreground.
-  //   FirebaseMessaging.onMessage.listen(_handleRemoteMessage);
-  //   // listen for notification while the app is in background or terminated.
-  //   FirebaseMessaging.onBackgroundMessage(_handleRemoteMessage);
-  //
-  //   runApp(MyApp());
-  // }
+  ///   Blueshift.handlePushNotification(message.data);
+  /// }
+  ///
+  /// Future<void> main() async {
+  ///   WidgetsFlutterBinding.ensureInitialized();
+  ///
+  ///   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  ///   // https://github.com/firebase/flutterfire/issues/6011
+  ///   await FirebaseMessaging.instance.getToken();
+  ///   // listen for notification while the app is in foreground.
+  ///   FirebaseMessaging.onMessage.listen(_handleRemoteMessage);
+  ///   // listen for notification while the app is in background or terminated.
+  ///   FirebaseMessaging.onBackgroundMessage(_handleRemoteMessage);
+  ///
+  ///   runApp(MyApp());
+  /// }
   /// ```
   static Future<void> handlePushNotification(Map<String, dynamic> data) async {
     return await _methodChannel.invokeMethod(
@@ -487,10 +487,10 @@ class Blueshift {
   /// ```
   static bool isBlueshiftUrl(String url) {
     Uri uri = Uri.parse(url);
-    bool hasPaths = uri.pathSegments.isNotEmpty &&
+    bool hasBsftPath = uri.pathSegments.isNotEmpty &&
         (uri.pathSegments[0] == 'z' || uri.pathSegments[0] == 'track');
-    bool hasQueryParams = uri.queryParameters.containsKey('uid') &&
+    bool hasBsftParams = uri.queryParameters.containsKey('uid') &&
         uri.queryParameters.containsKey('mid');
-    return hasPaths && hasQueryParams;
+    return hasBsftPath && hasBsftParams;
   }
 }

@@ -11,7 +11,7 @@ Obtain the event api key from Blueshift's dashboard and supply it as mentioned b
 ```xml
 <meta-data
     android:name="com.blueshift.config.API_KEY"
-    android:value="${blueshiftApiKey}" />
+    android:value="BLUESHIFT_EVENT_API_KEY" />
 ```
 
 ### Optional configurations

@@ -63,10 +63,10 @@
 
         <meta-data
             android:name="com.blueshift.config.API_KEY"
-            android:value="**************************8156d9" />
+            android:value="BLUESHIFT_EVENT_API_KEY" />
         <meta-data
             android:name="com.blueshift.config.REGION"
-            android:value="EU" />
+            android:value="US" />
         <meta-data
             android:name="com.blueshift.config.ENABLE_PUSH"
             android:value="true" />
@@ -129,6 +129,6 @@
             android:value="INSTANCE_ID" />
         <meta-data
             android:name="com.blueshift.config.CUSTOM_DEVICE_ID"
-            android:value="BoomBang" />
+            android:value="YOUR_CUSTOM_DEVICE_ID" />
     </application>
 </manifest>
