@@ -1,3 +1,5 @@
+#import <CoreLocation/CoreLocation.h>
+
 #import "BlueshiftFlutterPlugin.h"
 #import "BlueShift.h"
 #import "BlueshiftVersion.h"
@@ -32,82 +34,83 @@
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"identifyWithDetails" isEqualToString:call.method]) {
       [self identify:call];
-  }  else if ([@"trackCustomEvent" isEqualToString:call.method]) {
+  } else if ([@"trackCustomEvent" isEqualToString:call.method]) {
       [self trackCustomEvent:call];
-  }  else if ([@"trackScreenView" isEqualToString:call.method]) {
+  } else if ([@"trackScreenView" isEqualToString:call.method]) {
       [self trackScreenView:call];
-  }  else if ([@"requestPushNotificationPermission" isEqualToString:call.method]) {
+  } else if ([@"requestPushNotificationPermission" isEqualToString:call.method]) {
       [self registerForRemoteNotification];
-  }  else if ([@"registerForInAppMessage" isEqualToString:call.method]) {
+  } else if ([@"registerForInAppMessage" isEqualToString:call.method]) {
       [self registerForInAppMessage:call];
-  }  else if ([@"unregisterForInAppMessage" isEqualToString:call.method]) {
+  } else if ([@"unregisterForInAppMessage" isEqualToString:call.method]) {
       [self unregisterForInAppMessage];
-  }  else if ([@"fetchInAppNotification" isEqualToString:call.method]) {
+  } else if ([@"fetchInAppNotification" isEqualToString:call.method]) {
       [self fetchInAppNotification];
-  }  else if ([@"displayInAppNotification" isEqualToString:call.method]) {
+  } else if ([@"displayInAppNotification" isEqualToString:call.method]) {
       [self displayInAppNotification];
-  }  else if ([@"setUserInfoEmailId" isEqualToString:call.method]) {
+  } else if ([@"setUserInfoEmailId" isEqualToString:call.method]) {
       [self setUserInfoEmailId:call];
-  }  else if ([@"setUserInfoCustomerId" isEqualToString:call.method]) {
+  } else if ([@"setUserInfoCustomerId" isEqualToString:call.method]) {
       [self setUserInfoCustomerId:call];
-  }  else if ([@"setUserInfoExtras" isEqualToString:call.method]) {
+  } else if ([@"setUserInfoExtras" isEqualToString:call.method]) {
       [self setUserInfoExtras:call];
-  }  else if ([@"setUserInfoFirstName" isEqualToString:call.method]) {
+  } else if ([@"setUserInfoFirstName" isEqualToString:call.method]) {
       [self setUserInfoFirstName:call];
-  }  else if ([@"setUserInfoLastName" isEqualToString:call.method]) {
+  } else if ([@"setUserInfoLastName" isEqualToString:call.method]) {
       [self setUserInfoLastName:call];
-  }  else if ([@"removeUserInfo" isEqualToString:call.method]) {
+  } else if ([@"removeUserInfo" isEqualToString:call.method]) {
       [self removeUserInfo];
-  }  else if ([@"resetDeviceId" isEqualToString:call.method]) {
+  } else if ([@"resetDeviceId" isEqualToString:call.method]) {
       [self resetDeviceId];
-  }  else if ([@"setEnablePush" isEqualToString:call.method]) {
+  } else if ([@"setEnablePush" isEqualToString:call.method]) {
       [self setEnablePush:call];
-  }  else if ([@"setEnableInApp" isEqualToString:call.method]) {
+  } else if ([@"setEnableInApp" isEqualToString:call.method]) {
       [self setEnableInApp:call];
-  }  else if ([@"setEnableTracking" isEqualToString:call.method]) {
+  } else if ([@"setEnableTracking" isEqualToString:call.method]) {
       [self setEnableTracking:call];
-  }  else if ([@"setIDFA" isEqualToString:call.method]) {
+  } else if ([@"setIDFA" isEqualToString:call.method]) {
       [self setIDFA:call];
-  }  else if ([@"setCurrentLocation" isEqualToString:call.method]) {
+  } else if ([@"setCurrentLocation" isEqualToString:call.method]) {
      [self setCurrentLocation:call];
-  }  else if ([@"getEnableInAppStatus" isEqualToString:call.method]) {
+  } else if ([@"getEnableInAppStatus" isEqualToString:call.method]) {
       [self getEnableInAppStatus:result];
       return;
-  }  else if ([@"getEnablePushStatus" isEqualToString:call.method]) {
+  } else if ([@"getEnablePushStatus" isEqualToString:call.method]) {
       [self getEnablePushStatus:result];
       return;
-  }  else if ([@"getEnableTrackingStatus" isEqualToString:call.method]) {
+  } else if ([@"getEnableTrackingStatus" isEqualToString:call.method]) {
       [self getEnableTrackingStatus:result];
       return;
-  }  else if ([@"getUserInfoFirstName" isEqualToString:call.method]) {
+  } else if ([@"getUserInfoFirstName" isEqualToString:call.method]) {
       [self getUserInfoFirstName:result];
       return;
-  }  else if ([@"getUserInfoLastName" isEqualToString:call.method]) {
+  } else if ([@"getUserInfoLastName" isEqualToString:call.method]) {
       [self getUserInfoLastName:result];
       return;
-  }  else if ([@"getUserInfoEmailId" isEqualToString:call.method]) {
+  } else if ([@"getUserInfoEmailId" isEqualToString:call.method]) {
       [self getUserInfoEmailId:result];
       return;
-  }  else if ([@"getUserInfoCustomerId" isEqualToString:call.method]) {
+  } else if ([@"getUserInfoCustomerId" isEqualToString:call.method]) {
       [self getUserInfoCustomerId:result];
       return;
-  }  else if ([@"getUserInfoExtras" isEqualToString:call.method]) {
+  } else if ([@"getUserInfoExtras" isEqualToString:call.method]) {
       [self getUserInfoExtras:result];
       return;
-  }  else if ([@"getCurrentDeviceId" isEqualToString:call.method]) {
+  } else if ([@"getCurrentDeviceId" isEqualToString:call.method]) {
       [self getCurrentDeviceId:result];
       return;
-  }  else if ([@"liveContentByEmailId" isEqualToString:call.method]) {
+  } else if ([@"getInitialUrl" isEqualToString: call.method]) {
+    // Placeholder method for Android
+    result(@"");
+    return;
+  } else if ([@"liveContentByEmailId" isEqualToString:call.method]) {
       [self getLiveContentByEmail:call callback:result];
       return;
-  }  else if ([@"liveContentByCustomerId" isEqualToString:call.method]) {
+  } else if ([@"liveContentByCustomerId" isEqualToString:call.method]) {
       [self getLiveContentByCustomerId:call callback:result];
       return;
-  }  else if ([@"liveContentByDeviceId" isEqualToString:call.method]) {
+  } else if ([@"liveContentByDeviceId" isEqualToString:call.method]) {
       [self getLiveContentByDeviceId:call callback:result];
-      return;
-  }  else if ([@"isBlueshiftPushNotification" isEqualToString:call.method]) {
-      [self isBlueshiftPushNotification:call result:result];
       return;
   } else {
     result(FlutterMethodNotImplemented);
@@ -326,12 +329,6 @@
     }
 }
 
-- (void)isBlueshiftPushNotification:(FlutterMethodCall*)call result:(FlutterResult)callback{
-    NSDictionary *payload = call.arguments;
-    BOOL isBlueshiftPush = [[BlueShift sharedInstance] isBlueshiftPushNotification:payload];
-    callback(@(isBlueshiftPush));
-}
-
 #pragma mark Live content
 - (void)getLiveContentByEmail:(FlutterMethodCall*)call callback:(FlutterResult)callback {
     NSString *slot = call.arguments[@"slot"];
@@ -343,21 +340,15 @@
         }
         [BlueShiftLiveContent fetchLiveContentByEmail:slot withContext:context success:^(NSDictionary *result) {
             if (callback) {
-                NSLog(@"results - %@", result);
-                callback(@[result,[NSNull null]]);
+                callback(result);
             }
         } failure:^(NSError *error) {
             if (callback) {
-                NSLog(@"Fail - %@", error);
-                if (error.debugDescription) {
-                    callback(@[[NSNull null],error.debugDescription]);
-                } else {
-                    callback(@[[NSNull null],@"Failed to fetch live content."]);
-                }
+                callback(@{});
             }
         }];
     } else {
-        callback(@[[NSNull null],@"Invalid slot data type."]);
+        callback(@{});
     }
 }
 
@@ -368,22 +359,18 @@
     if ([slot isKindOfClass:[NSString class]]) {
         if(![context isKindOfClass:[NSDictionary class]]) {
             context = nil;
-        }
+        }   
         [BlueShiftLiveContent fetchLiveContentByCustomerID:slot withContext:context success:^(NSDictionary *result) {
             if (callback) {
-                callback(@[result,[NSNull null]]);
+                callback(result);
             }
         } failure:^(NSError *error) {
             if (callback) {
-                if (error.debugDescription) {
-                    callback(@[[NSNull null],error.debugDescription]);
-                } else {
-                    callback(@[[NSNull null],@"Failed to fetch live content."]);
-                }
+                callback(@{});
             }
         }];
     } else {
-        callback(@[[NSNull null],@"Invalid slot data type."]);
+        callback(@{});
     }
 }
 
@@ -397,19 +384,15 @@
         }
         [BlueShiftLiveContent fetchLiveContentByDeviceID:slot withContext:context success:^(NSDictionary *result) {
             if (callback) {
-                callback(@[result,[NSNull null]]);
+                callback(result);
             }
         } failure:^(NSError *error) {
             if (callback) {
-                if (error.debugDescription) {
-                    callback(@[[NSNull null],error.debugDescription]);
-                } else {
-                    callback(@[[NSNull null],@"Failed to fetch live content."]);
-                }
+                callback(@{});
             }
         }];
     } else {
-        callback(@[[NSNull null],@"Invalid slot data type."]);
+        callback(@{});
     }
 }
 
