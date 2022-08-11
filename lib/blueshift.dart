@@ -40,7 +40,10 @@ class Blueshift {
   /// Blueshift.trackCustomEvent('eventName', { 'key' : 'val' }, false);
   /// ```
   static Future<void> trackCustomEvent(
-      String eventName, Map<String, dynamic> details, bool isBatch) async {
+    String eventName,
+    Map<String, dynamic> details,
+    bool isBatch,
+  ) async {
     return await _methodChannel.invokeMethod(
       'trackCustomEvent',
       {'eventName': eventName, 'eventData': details, 'isBatch': isBatch},
@@ -53,7 +56,10 @@ class Blueshift {
   /// Blueshift.trackScreenView('screenName', { 'key' : 'val' }, false);
   /// ```
   static Future<void> trackScreenView(
-      String screenName, Map<String, dynamic> details, bool isBatch) async {
+    String screenName,
+    Map<String, dynamic> details,
+    bool isBatch,
+  ) async {
     return await _methodChannel.invokeMethod(
       'trackScreenView',
       {'screenName': screenName, 'eventData': details, 'isBatch': isBatch},
@@ -351,58 +357,58 @@ class Blueshift {
   /// Fetch live content from Blueshift based on the slot provided.
   ///
   /// ```dart
-  /// Future<List<dynamic>?> content = await Blueshift.liveContentByEmailId(
+  /// Future<Map<String,dynamic>> content = await Blueshift.liveContentByEmailId(
   ///   'slotName',
   ///   { 'exec_context' : 'exec_context_value' },
   /// );
   /// ```
-  static Future<List<dynamic>?> liveContentByEmailId(
+  static Future<Map<String, dynamic>> liveContentByEmailId(
     String slot,
     Map<String, dynamic> context,
   ) async {
-    final List<dynamic>? content = await _methodChannel.invokeMethod(
+    dynamic response = await _methodChannel.invokeMethod(
       'liveContentByEmailId',
       {'slot': slot, 'context': context},
     );
-    return content;
+    return Map<String, dynamic>.from(response);
   }
 
   /// Fetch live content from Blueshift based on the slot provided.
   ///
   /// ```dart
-  /// Future<List<dynamic>?> content = await Blueshift.liveContentByCustomerId(
+  /// Future<Map<String,dynamic>> content = await Blueshift.liveContentByCustomerId(
   ///   'slotName',
   ///   { 'exec_context' : 'exec_context_value' },
   /// );
   /// ```
-  static Future<List<dynamic>?> liveContentByCustomerId(
+  static Future<Map<String, dynamic>> liveContentByCustomerId(
     String slot,
     Map<String, dynamic> context,
   ) async {
-    final List? content = await _methodChannel.invokeMethod(
+    dynamic response = await _methodChannel.invokeMethod(
       'liveContentByCustomerId',
       {'slot': slot, 'context': context},
     );
-    return content;
+    return Map<String, dynamic>.from(response);
   }
 
   /// Fetch live content from Blueshift based on the slot provided.
   ///
   /// ```dart
-  /// Future<List<dynamic>?> content = await Blueshift.liveContentByDeviceId(
+  /// Future<Map<String,dynamic>> content = await Blueshift.liveContentByDeviceId(
   ///   'slotName',
   ///   { 'exec_context' : 'exec_context_value' },
   /// );
   /// ```
-  static Future<List<dynamic>?> liveContentByDeviceId(
+  static Future<Map<String, dynamic>> liveContentByDeviceId(
     String slot,
     Map<String, dynamic> context,
   ) async {
-    final List? content = await _methodChannel.invokeMethod(
+    dynamic response = await _methodChannel.invokeMethod(
       'liveContentByDeviceId',
       {'slot': slot, 'context': context},
     );
-    return content;
+    return Map<String, dynamic>.from(response);
   }
 
   /// Return the current device id being used.

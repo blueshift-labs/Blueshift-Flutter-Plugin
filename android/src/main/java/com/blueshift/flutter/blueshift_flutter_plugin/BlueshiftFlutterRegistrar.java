@@ -56,10 +56,10 @@ public class BlueshiftFlutterRegistrar {
                 boolean enableInAppJs = metaData.getBoolean(ENABLE_IN_APP_JS, false);
                 config.setJavaScriptForInAppWebViewEnabled(enableInAppJs);
 
-                long inAppIntervalSeconds = metaData.getLong(IN_APP_INTERVAL, 0);
+                long inAppIntervalSeconds = metaData.getInt(IN_APP_INTERVAL, 0);
                 if (inAppIntervalSeconds > 0) config.setInAppInterval(inAppIntervalSeconds * 1000L);
 
-                long batchIntervalSeconds = metaData.getLong(BATCH_INTERVAL, 0);
+                long batchIntervalSeconds = metaData.getInt(BATCH_INTERVAL, 0);
                 if (inAppIntervalSeconds > 0) config.setBatchInterval(batchIntervalSeconds * 1000L);
 
                 int notificationIconSmall = metaData.getInt(NOTIFICATION_ICON_SMALL, 0);
@@ -105,7 +105,7 @@ public class BlueshiftFlutterRegistrar {
                 boolean enableAutoAppOpen = metaData.getBoolean(ENABLE_AUTO_APP_OPEN, true);
                 config.setEnableAutoAppOpenFiring(enableAutoAppOpen);
 
-                long autoAppOpenIntervalSeconds = metaData.getLong(AUTO_APP_OPEN_INTERVAL, 0);
+                long autoAppOpenIntervalSeconds = metaData.getInt(AUTO_APP_OPEN_INTERVAL, 0);
                 if (autoAppOpenIntervalSeconds > 0) {
                     config.setAutoAppOpenInterval(autoAppOpenIntervalSeconds);
                 }

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.blueshift.Blueshift;
 import com.blueshift.BlueshiftAppPreferences;
+import com.blueshift.BlueshiftExecutor;
 import com.blueshift.BlueshiftLinksHandler;
 import com.blueshift.BlueshiftLinksListener;
 import com.blueshift.BlueshiftLogger;
@@ -19,7 +20,10 @@ import com.blueshift.fcm.BlueshiftMessagingService;
 import com.blueshift.model.UserInfo;
 import com.blueshift.rich_push.RichPushConstants;
 import com.blueshift.util.DeviceUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -321,7 +325,9 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
             Intent intent = new Intent();
             intent.putExtras(bundle);
-            BlueshiftMessagingService.handlePushMessage(appContext, intent);
+
+            // do the heavy lifting in background.
+            BlueshiftExecutor.getInstance().runOnWorkerThread(() -> BlueshiftMessagingService.handlePushMessage(appContext, intent));
         } else {
             BlueshiftLogger.w(TAG, "data is null.");
         }
@@ -476,7 +482,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         String slot = methodCall.argument("slot");
         if (slot != null) {
             HashMap<String, Object> context = methodCall.argument("context");
-            Blueshift.getInstance(appContext).getLiveContentByEmail(slot, context, result::success);
+            Blueshift.getInstance(appContext).getLiveContentByEmail(slot, context, response -> result.success(stringToMap(response)));
         } else {
             BlueshiftLogger.w(TAG, "Can not fetch live content without a slot name.");
         }
@@ -486,7 +492,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         String slot = methodCall.argument("slot");
         if (slot != null) {
             HashMap<String, Object> context = methodCall.argument("context");
-            Blueshift.getInstance(appContext).getLiveContentByCustomerId(slot, context, result::success);
+            Blueshift.getInstance(appContext).getLiveContentByCustomerId(slot, context, response -> result.success(stringToMap(response)));
         } else {
             BlueshiftLogger.w(TAG, "Can not fetch live content without a slot name.");
         }
@@ -496,10 +502,24 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         String slot = methodCall.argument("slot");
         if (slot != null) {
             HashMap<String, Object> context = methodCall.argument("context");
-            Blueshift.getInstance(appContext).getLiveContentByDeviceId(slot, context, result::success);
+            Blueshift.getInstance(appContext).getLiveContentByDeviceId(slot, context, response -> result.success(stringToMap(response)));
         } else {
             BlueshiftLogger.w(TAG, "Can not fetch live content without a slot name.");
         }
+    }
+
+    private HashMap<String, Object> stringToMap(String json) {
+        try {
+            if (json != null) {
+                Type type = new TypeToken<HashMap<String, Object>>() {
+                }.getType();
+                return new Gson().fromJson(json, type);
+            }
+        } catch (Exception e) {
+            BlueshiftLogger.e(TAG, e);
+        }
+
+        return new HashMap<>();
     }
 
     private void resetDeviceId() {

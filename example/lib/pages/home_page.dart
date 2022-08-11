@@ -573,12 +573,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     setState(() {
                                       liveContent = "";
                                     });
-                                    List<dynamic>? content =
+                                    Map<String, dynamic> content =
                                         await Blueshift.liveContentByEmailId(
                                             liveContentSlot, {});
                                     setState(() {
-                                      liveContent = content![0]["content"]
-                                          ["html_content"];
+                                      liveContent =
+                                          content["content"]["html_content"];
                                     });
                                   },
                                   child: const Text("Live content by email id"),
@@ -594,14 +594,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     setState(() {
                                       liveContent = "";
                                     });
-                                    List<dynamic>? content =
+                                    Map<String, dynamic> content =
                                         await Blueshift.liveContentByCustomerId(
                                             liveContentSlot, {});
                                     setState(() {
-                                      if (content?[0] != null) {
-                                        liveContent = content![0]["content"]
-                                            ["html_content"];
-                                      }
+                                      liveContent =
+                                          content["content"]["html_content"];
                                     });
                                   },
                                   child:
@@ -618,12 +616,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     setState(() {
                                       liveContent = "";
                                     });
-                                    List? content =
+                                    Map<String, dynamic> content =
                                         await Blueshift.liveContentByDeviceId(
                                             liveContentSlot, {});
                                     setState(() {
-                                      liveContent = content![0]["content"]
-                                          ["html_content"];
+                                      liveContent =
+                                          content["content"]["html_content"];
                                     });
                                   },
                                   child:
