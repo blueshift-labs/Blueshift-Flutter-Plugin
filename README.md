@@ -140,7 +140,7 @@ BlueshiftFlutterPlugin.registerForRemoteNotification();
 ## In-App Notifications
 Once you enable the in-app notifications from the SDK as mentioned in the Android and iOS set-up documents, you will need to register the screens in order to see in-app messages. You can register the screens in two ways.
 
-- **Register all screens** Refer to [Android](Android.md#3-in-app-messaging) and [iOS](iOS.md#3-enable-in-app-messages) integration documents to register all screens to receive in-app notifications. After completing this set up, in-app can be displayed on any screen when it is availble to display.
+- **Register all screens** Refer to [Android](Android.md#in-app-messages) and [iOS](iOS.md#3-enable-in-app-messages) integration documents to register all screens to receive in-app notifications. After completing this set up, in-app can be displayed on any screen when it is availble to display.
 
 - **Register and unregister each screen** of your Flutter project for in-app messages. If you don’t register a screen for in-app messages, the in-app messages will stop showing up for screens that are not registered. You will need to add in-app registration and unregistration code on the `componentDidMount` and `componentWillUnmount` respectively inside your screens. Refer below code snipper for reference. 
 
