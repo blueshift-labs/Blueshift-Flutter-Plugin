@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <BlueShift-iOS-Extension-SDK/BlueShiftAppExtension.h>
+#import <BlueShift_iOS_Extension_SDK/BlueShiftAppExtension.h>
 
 @interface NotificationViewController : BlueShiftCarousalViewController
 
