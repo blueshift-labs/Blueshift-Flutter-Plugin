@@ -1,4 +1,4 @@
-import 'package:blueshift_flutter_plugin/blueshift.dart';
+import 'package:blueshift_plugin/blueshift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

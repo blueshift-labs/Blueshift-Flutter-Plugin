@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:blueshift_flutter_plugin/blueshift.dart';
+import 'package:blueshift_plugin/blueshift.dart';
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

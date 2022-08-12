@@ -1,4 +1,4 @@
-name: blueshift_flutter_plugin
+name: blueshift_plugin
 description: Fltter plugin for integrating Blueshift's native Android/iOS SDK to your Flutter app.
 version: 0.0.1-beta
 homepage: https://blueshift.com
@@ -31,7 +31,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.blueshift.flutter.blueshift_flutter_plugin
+        package: com.blueshift.flutter.blueshift_plugin
         pluginClass: BlueshiftFlutterPlugin
       ios:
         pluginClass: BlueshiftFlutterPlugin

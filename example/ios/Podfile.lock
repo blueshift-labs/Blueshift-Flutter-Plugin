@@ -1,7 +1,7 @@
 PODS:
   - BlueShift-iOS-Extension-SDK (2.2.6)
   - BlueShift-iOS-SDK (2.2.6)
-  - blueshift_flutter_plugin (0.0.1):
+  - blueshift_plugin (0.0.1):
     - BlueShift-iOS-SDK (~> 2.2.6)
     - Flutter
   - Firebase/CoreOnly (9.2.0):
@@ -73,7 +73,7 @@ PODS:
 
 DEPENDENCIES:
   - BlueShift-iOS-Extension-SDK
-  - blueshift_flutter_plugin (from `.symlinks/plugins/blueshift_flutter_plugin/ios`)
+  - blueshift_plugin (from `.symlinks/plugins/blueshift_plugin/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -94,8 +94,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  blueshift_flutter_plugin:
-    :path: ".symlinks/plugins/blueshift_flutter_plugin/ios"
+  blueshift_plugin:
+    :path: ".symlinks/plugins/blueshift_plugin/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -104,9 +104,9 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  BlueShift-iOS-Extension-SDK: 81a015dacc87f18a330369ea3fd2769408fe493c
-  BlueShift-iOS-SDK: 2bbf775d89314c0cc66489dfbbfc85a1aad2e05a
-  blueshift_flutter_plugin: 88e1d4776c315a55efba9fd18ff497d57fd4c7cf
+  BlueShift-iOS-Extension-SDK: 2bba6be940508888a30fa6b596f87bc9b67713b2
+  BlueShift-iOS-SDK: 0bc8223006a77feffc2a1fc3376d4845ab34de7e
+  blueshift_plugin: a2b8cad45173c38520ed59bf8d518db06974969c
   Firebase: 4ba896cb8e5105d4b9e247e1c1b6222b548df55a
   firebase_core: 9e09bbfbf5467e459822850732f5fb648f5b1927
   firebase_messaging: 405f36f22122866761e7ba7aa1dcecbae09ef836

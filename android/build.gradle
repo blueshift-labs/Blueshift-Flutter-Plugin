@@ -1,4 +1,4 @@
-group 'com.blueshift.flutter.blueshift_flutter_plugin'
+group 'com.blueshift.flutter.blueshift_plugin'
 version '1.0'
 
 buildscript {

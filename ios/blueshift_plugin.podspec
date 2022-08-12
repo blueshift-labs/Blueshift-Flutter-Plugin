@@ -3,10 +3,10 @@
 # Run `pod lib lint blueshift_flutter_plugin.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'blueshift_flutter_plugin'
+  s.name             = 'blueshift_plugin'
   s.version          = '0.0.1'
   s.summary          = 'Blueshift Flutter Plugin'
-  s.description      = "Fluter plugin for the Blueshift Android and iOS SDK"
+  s.description      = "Flutter plugin for the Blueshift Android and iOS SDK"
   s.homepage         = 'https://developer.blueshift.com/docs'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Blueshift' => 'support@getblueshift.com' }

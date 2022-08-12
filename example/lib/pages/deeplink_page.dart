@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:blueshift_flutter_plugin/blueshift.dart';
+import 'package:blueshift_plugin/blueshift.dart';
 
 class DeeplinkPage extends StatefulWidget {
   var deeplink = "";

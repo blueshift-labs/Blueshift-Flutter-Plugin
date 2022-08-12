@@ -1,4 +1,4 @@
-package com.blueshift.flutter.blueshift_flutter_plugin;
+package com.blueshift.flutter.blueshift_plugin;
 
 import android.app.Activity;
 import android.content.Context;
@@ -37,7 +37,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 
 /**
- * BlueshiftFlutterPlugin
+ * Blueshift Plugin
  */
 public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler {
     private final String TAG = "BlueshiftFlutter";
@@ -57,16 +57,11 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         appContext = flutterPluginBinding.getApplicationContext();
 
-        // todo: rename the channel from events -> deeplink_events
         eventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
         methodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/methods");
 
         eventChannel.setStreamHandler(this); // EventChannel.StreamHandler
         methodChannel.setMethodCallHandler(this); // MethodCallHandler
-
-        if (BuildConfig.DEBUG) {
-            BlueshiftLogger.setLogLevel(BlueshiftLogger.VERBOSE);
-        }
 
         BlueshiftFlutterRegistrar.initSdk(appContext, getMetaData());
     }

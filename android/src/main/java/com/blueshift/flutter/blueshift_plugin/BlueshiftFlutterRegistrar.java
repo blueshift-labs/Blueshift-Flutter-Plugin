@@ -1,7 +1,8 @@
-package com.blueshift.flutter.blueshift_flutter_plugin;
+package com.blueshift.flutter.blueshift_plugin;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -36,6 +37,36 @@ public class BlueshiftFlutterRegistrar {
     private static final String JOB_ID_NETWORK_CHANGE = PREFIX + "JOB_ID_NETWORK_CHANGE";
     private static final String DEVICE_ID_SOURCE = PREFIX + "DEVICE_ID_SOURCE";
     private static final String CUSTOM_DEVICE_ID = PREFIX + "CUSTOM_DEVICE_ID";
+    private static final String LOG_LEVEL = PREFIX + "LOG_LEVEL";
+
+    private static void enableSdkLogging(String logLevel) {
+        if (logLevel != null) {
+            int level = -1;
+            switch (logLevel) {
+                case "V":
+                    level = BlueshiftLogger.VERBOSE;
+                    break;
+                case "D":
+                    level = BlueshiftLogger.DEBUG;
+                    break;
+                case "I":
+                    level = BlueshiftLogger.INFO;
+                    break;
+                case "W":
+                    level = BlueshiftLogger.WARNING;
+                    break;
+                case "E":
+                    level = BlueshiftLogger.ERROR;
+                    break;
+                default:
+                    Log.d(TAG, "Invalid log level supplied: " + logLevel + ". Log level must be one of these options: V, D, I, W, and E");
+            }
+
+            if (level != -1) {
+                BlueshiftLogger.setLogLevel(level);
+            }
+        }
+    }
 
     public static void initSdk(Context context, Bundle metaData) {
         if (context != null && metaData != null && metaData.containsKey(API_KEY)) {
@@ -43,6 +74,8 @@ public class BlueshiftFlutterRegistrar {
             if (apiKey != null && !apiKey.isEmpty()) {
                 Configuration config = new Configuration();
                 config.setApiKey(apiKey);
+
+                enableSdkLogging(metaData.getString(LOG_LEVEL, null));
 
                 int appIcon = metaData.getInt(APP_ICON, 0);
                 if (appIcon > 0) config.setAppIcon(appIcon);
