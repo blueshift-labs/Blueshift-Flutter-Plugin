@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:blueshift_plugin/blueshift.dart';
+import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:flutter/material.dart';
 
