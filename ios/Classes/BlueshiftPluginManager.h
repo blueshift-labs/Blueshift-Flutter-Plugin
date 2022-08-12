@@ -7,9 +7,9 @@
 
 #import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
-#import "BlueShift.h"
+#import <BlueShift_iOS_SDK/BlueShift.h>
 #import <UserNotifications/UserNotifications.h>
-#import <BlueShift-iOS-SDK/BlueshiftUniversalLinksDelegate.h>
+#import <BlueShift_iOS_SDK/BlueshiftUniversalLinksDelegate.h>
 
 #ifndef BlueshiftPluginManager_h
 #define BlueshiftPluginManager_h
