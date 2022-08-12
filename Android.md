@@ -2,7 +2,7 @@
 
 ## Permissions
 
-Add the following permisions to your AndroidManifest file.
+Add the following permissions to your AndroidManifest file.
 
 ```xml
 <!-- Internet permission is required to send events, 
@@ -219,7 +219,7 @@ Supported values are, `INSTANCE_ID` , `INSTANCE_ID_PKG_NAME` , `GUID` , and `CUS
 
 ##### Custom device ID
 
-When the device id source is `CUSTOM` , use the following config to suppy the custom device id.
+When the device id source is `CUSTOM` , use the following config to supply the custom device id.
 
 ```xml
 <meta-data

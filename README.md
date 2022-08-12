@@ -1,4 +1,4 @@
-# blueshift-flutter-plugin
+# Blueshift Flutter Plugin
 
 Flutter plugin for integrating Blueshift's iOS and Android SDKs to your Flutter application.
 
@@ -9,13 +9,14 @@ $ fluter pub get blueshift-flutter-plugin
 ```
 
 ## Android and iOS Integration
+
 Refer to the below documents to integrate the Blueshift SDK for Android and iOS.
 
-- [Android SDK Integration]() [Link to be added]
-- [iOS SDK Integration]() [Link to be added]
-
+- [Android SDK Integration](./Android.md)
+- [iOS SDK Integration](./iOS.md)
 
 ## Usage
+
 Import the Blueshift plugin to your Dart code.
 
 ```dart
@@ -34,7 +35,7 @@ Blueshift.identifyWithDetails(
 
 Refer to [these Blueshift Dart methods]() [Link to be added] to know about features and methods supported by the plugin and how to use them.
 
-### Setting user info
+### Storing user info
 
 Once a user is logged-in to the app, the app is recommended to store their info inside the Blueshift plugin's user info class. This will help in sending the same info in each event fired by the plugin. It is important to remove this cached information when the user logs out.
 
@@ -67,7 +68,7 @@ Blueshift.removeUserInfo();
 ```
 Make sure you fire an `identify` event after making changes to the user data to update it on the Blueshift server.
 
-### Identify event
+### The identify event
 The `identify` event is responsible for updating the data in the customer's profile on the Blueshift server. Whenever you make a change to the customer profile attributes using the Blueshift plugin, we recommend you to fire an `identify` event to reflect those changes on the Blueshift server.
 
 ```dart
@@ -78,7 +79,7 @@ Blueshift.identifyWithDetails({
 });
 ```
 
-### Custom Event
+### Sending custom Event
 You could fire custom events with custom data to Blueshift using the plugin.
 
 ```dart
@@ -165,7 +166,7 @@ Blueshift.registerForInAppMessage("HomeScreen");
 Blueshift.unregisterForInAppMessage();
 ```
 
-### Deep links Event Listener
+### Deep Link Event Listener
 
 Blueshift's plugin will take care of delivering the deep link added inside the push and in-app notifications to the Flutter once the user interacts with the notification.
 
