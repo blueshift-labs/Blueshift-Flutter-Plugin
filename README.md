@@ -2,13 +2,7 @@
 
 Flutter plugin for integrating Blueshift's iOS and Android SDKs to your Flutter application.
 
-## Installation
-
-```shell
-$ fluter pub add blueshift-plugin
-```
-
-## Android and iOS Integration
+## Integration
 
 Refer to the [Flutter Plugin Integration](https://developer.blueshift.com/docs/install-and-set-up-flutter-plugin) guide to integrate the Blueshift SDK for Android and iOS.
 
@@ -30,7 +24,7 @@ Blueshift.identifyWithDetails(
 );
 ```
 
-Refer to [these Blueshift Dart methods](./lib/blueshift_plugin.dart) to know about features and methods supported by the plugin and how to use them.
+Refer to [the Blueshift class](./lib/blueshift_plugin.dart) to know more about features and methods supported by the plugin and how to use them.
 
 ## License
 
