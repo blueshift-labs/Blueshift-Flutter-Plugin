@@ -5,7 +5,7 @@ Flutter plugin for integrating Blueshift's iOS and Android SDKs to your Flutter 
 ## Installation
 
 ```shell
-$ fluter pub get blueshift-plugin
+$ fluter pub add blueshift-plugin
 ```
 
 ## Android and iOS Integration
