@@ -6,11 +6,9 @@ repository: https://github.com/blueshift-labs/Blueshift-Flutter-Plugin
 issue_tracker: https://github.com/blueshift-labs/Blueshift-Flutter-Plugin/issues
 documentation: https://developer.blueshift.com/docs/install-and-set-up-flutter-plugin
 
-# prevent publishing secrets to pub.dev
+# prevent publishing sample app to pub.dev
 false_secrets:
-  - /example/android/app/google-services.json
-  - /example/ios/Runner/GoogleService-Info.plist
-  - /example/lib/firebase_options.dart
+  - /example/**
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
