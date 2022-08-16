@@ -48,6 +48,8 @@
       [self fetchInAppNotification];
   } else if ([@"displayInAppNotification" isEqualToString:call.method]) {
       [self displayInAppNotification];
+  } else if ([@"handleDataMessage" isEqualToString: call.method]) {
+      // Placeholder method for Android
   } else if ([@"setUserInfoEmailId" isEqualToString:call.method]) {
       [self setUserInfoEmailId:call];
   } else if ([@"setUserInfoCustomerId" isEqualToString:call.method]) {
