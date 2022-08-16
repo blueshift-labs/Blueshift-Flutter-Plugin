@@ -10,10 +10,7 @@ $ fluter pub get blueshift-plugin
 
 ## Android and iOS Integration
 
-Refer to the below documents to integrate the Blueshift SDK for Android and iOS.
-- [Flutter Plugin Integration](https://developer.blueshift.com/docs/install-and-set-up-flutter-plugin)
-- [Android SDK Integration](https://developer.blueshift.com/docs/integrate-your-flutter-android-app)
-- [iOS SDK Integration](https://developer.blueshift.com/docs/integrate-your-flutter-ios-app)
+Refer to the [Flutter Plugin Integration](https://developer.blueshift.com/docs/install-and-set-up-flutter-plugin) guide to integrate the Blueshift SDK for Android and iOS.
 
 ## Usage
 
