@@ -1,6 +1,6 @@
 # blueshift_flutter_plugin_example
 
-Demonstrates how to use the blueshift_flutter_plugin plugin.
+Demonstrates how to use the blueshift_plugin plugin.
 
 ## Getting Started
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/routes.dart';
-import 'package:blueshift_flutter_plugin/blueshift.dart';
+import 'package:blueshift_plugin/blueshift_plugin.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

@@ -132,5 +132,8 @@
         <meta-data
             android:name="com.blueshift.config.CUSTOM_DEVICE_ID"
             android:value="YOUR_CUSTOM_DEVICE_ID" />
+        <meta-data
+            android:name="com.blueshift.config.LOG_LEVEL"
+            android:value="V" />
     </application>
 </manifest>
