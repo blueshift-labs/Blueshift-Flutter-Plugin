@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 
 import com.blueshift.Blueshift;
 import com.blueshift.BlueshiftAppPreferences;
+import com.blueshift.BlueshiftConstants;
 import com.blueshift.BlueshiftExecutor;
 import com.blueshift.BlueshiftLinksHandler;
 import com.blueshift.BlueshiftLinksListener;
 import com.blueshift.BlueshiftLogger;
+import com.blueshift.BuildConfig;
 import com.blueshift.fcm.BlueshiftMessagingService;
 import com.blueshift.model.UserInfo;
 import com.blueshift.rich_push.RichPushConstants;
@@ -40,14 +42,17 @@ import io.flutter.plugin.common.PluginRegistry;
  * Blueshift Plugin
  */
 public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler {
+    // TODO: 16/08/22 Change this value on each release.
+    private final String PLUGIN_VERSION = "0.0.1-beta";
     private final String TAG = "BlueshiftFlutter";
     private Activity appActivity;
     private Context appContext;
-    private EventChannel eventChannel;
+    private EventChannel deeplinkChannel;
     private MethodChannel methodChannel;
     private ActivityPluginBinding activityPluginBinding;
     private EventChannel.EventSink eventSink = null;
     private String cachedUrl = null;
+    private boolean inAppOnAllScreens = false;
     private final PluginRegistry.NewIntentListener newIntentListener = intent -> {
         handleDeepLinks(intent);
         return false;
@@ -57,13 +62,18 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         appContext = flutterPluginBinding.getApplicationContext();
 
-        eventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
+        deeplinkChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
         methodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/methods");
 
-        eventChannel.setStreamHandler(this); // EventChannel.StreamHandler
+        deeplinkChannel.setStreamHandler(this); // EventChannel.StreamHandler
         methodChannel.setMethodCallHandler(this); // MethodCallHandler
 
-        BlueshiftFlutterRegistrar.initSdk(appContext, getMetaData());
+        Bundle metaData = getMetaData();
+        BlueshiftFlutterRegistrar.initSdk(appContext, metaData);
+
+        if (metaData != null) {
+            inAppOnAllScreens = metaData.getBoolean("com.blueshift.config.IN_APP_ON_ALL_SCREENS", false);
+        }
     }
 
     private Bundle getMetaData() {
@@ -83,7 +93,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     @Override // FlutterPlugin
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        eventChannel.setStreamHandler(null);
+        deeplinkChannel.setStreamHandler(null);
         methodChannel.setMethodCallHandler(null);
     }
 
@@ -93,12 +103,20 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
         activityPluginBinding = binding;
         activityPluginBinding.addOnNewIntentListener(newIntentListener);
+
+        if (inAppOnAllScreens) {
+            Blueshift.getInstance(appContext).registerForInAppMessages(appActivity);
+        }
     }
 
     private void activityCleanup() {
         if (activityPluginBinding != null) {
             activityPluginBinding.removeOnNewIntentListener(newIntentListener);
             activityPluginBinding = null;
+        }
+
+        if (inAppOnAllScreens) {
+            Blueshift.getInstance(appContext).unregisterForInAppMessages(appActivity);
         }
 
         appActivity = null;
@@ -294,6 +312,15 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         }
     }
 
+    private HashMap<String, Object> appendVersion(HashMap<String, Object> map) {
+        if (map == null) map = new HashMap<>();
+
+        String version = BuildConfig.SDK_VERSION + "-FL-" + PLUGIN_VERSION;
+        map.put(BlueshiftConstants.KEY_SDK_VERSION, version);
+
+        return map;
+    }
+
     /**
      * This method is responsible for providing the deep link URL received by the plugin while
      * the app was in killed state or when the event channel was not ready. Once consumed, the
@@ -330,7 +357,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     private void identifyWithDetails(MethodCall methodCall) {
         HashMap<String, Object> extras = methodCall.argument("eventData");
-        Blueshift.getInstance(appContext).identifyUser(extras, false);
+        Blueshift.getInstance(appContext).identifyUser(appendVersion(extras), false);
     }
 
     private void trackCustomEvent(MethodCall methodCall) {
@@ -339,7 +366,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
             HashMap<String, Object> extras = methodCall.argument("eventData");
             boolean isBatch = Boolean.TRUE.equals(methodCall.argument("isBatch"));
 
-            Blueshift.getInstance(appContext).trackEvent(event, extras, isBatch);
+            Blueshift.getInstance(appContext).trackEvent(event, appendVersion(extras), isBatch);
         } else {
             BlueshiftLogger.w(TAG, "Can not send event without an event name.");
         }

@@ -135,5 +135,8 @@
         <meta-data
             android:name="com.blueshift.config.LOG_LEVEL"
             android:value="V" />
+        <meta-data
+            android:name="com.blueshift.config.IN_APP_ON_ALL_SCREENS"
+            android:value="true" />
     </application>
 </manifest>
