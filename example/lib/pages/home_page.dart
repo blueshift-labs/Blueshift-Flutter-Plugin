@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
+import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/drawer.dart';
@@ -37,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     getDefaults();
 
-    Blueshift.registerForInAppMessage("HomeScreen");
     deepLinkStream = Blueshift.getInstance.onDeepLinkReceived.listen(
       (String event) {
         navigateToDeepLinkPage(event);
@@ -50,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void deactivate() {
     super.deactivate();
     deepLinkStream.cancel();
-    Blueshift.unregisterForInAppMessage();
     _custIdController.dispose();
     _lastNameController.dispose();
     _deviceIdController.dispose();

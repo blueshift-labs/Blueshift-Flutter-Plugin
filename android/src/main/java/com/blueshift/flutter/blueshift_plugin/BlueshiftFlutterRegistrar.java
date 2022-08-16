@@ -59,7 +59,7 @@ public class BlueshiftFlutterRegistrar {
                     level = BlueshiftLogger.ERROR;
                     break;
                 default:
-                    Log.d(TAG, "Invalid log level supplied: " + logLevel + ". Log level must be one of these options: V, D, I, W, and E");
+                    Log.d(TAG, "Invalid log level supplied: " + logLevel + ". Supported values: V, D, I, W, and E");
             }
 
             if (level != -1) {
