@@ -1,7 +1,7 @@
 #import <Flutter/Flutter.h>
 
 #define kScreenViewed @"screen_viewed"
-#define kBlueshiftFlutterSDKVersion @"1.0.0"
+#define kBlueshiftFlutterSDKVersion @"0.0.1-beta"
 #define kBlueshiftEventChannel          @"blueshift/deeplink_event"
 #define kBlueshiftMethodChannel         @"blueshift/methods"
 

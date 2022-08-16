@@ -48,6 +48,8 @@
       [self fetchInAppNotification];
   } else if ([@"displayInAppNotification" isEqualToString:call.method]) {
       [self displayInAppNotification];
+  } else if ([@"handleDataMessage" isEqualToString: call.method]) {
+      // Placeholder method for Android
   } else if ([@"setUserInfoEmailId" isEqualToString:call.method]) {
       [self setUserInfoEmailId:call];
   } else if ([@"setUserInfoCustomerId" isEqualToString:call.method]) {
@@ -121,7 +123,7 @@
 
 #pragma mark Events
 - (void)identify:(FlutterMethodCall*)call {
-    NSDictionary *details = [self addRNSDKVersionString:call.arguments[@"eventData"]];
+    NSDictionary *details = [self addFLSDKVersionString:call.arguments[@"eventData"]];
     [[BlueShift sharedInstance] identifyUserWithDetails:details canBatchThisEvent:NO];
 }
 
@@ -130,7 +132,7 @@
     NSNumber* isBatch = (NSNumber*)call.arguments[@"isBatch"];
     NSDictionary *details = call.arguments[@"eventData"];
     if ([eventName isKindOfClass:[NSString class]]) {
-        [[BlueShift sharedInstance] trackEventForEventName:eventName andParameters:[self addRNSDKVersionString:details] canBatchThisEvent:isBatch.boolValue];
+        [[BlueShift sharedInstance] trackEventForEventName:eventName andParameters:[self addFLSDKVersionString:details] canBatchThisEvent:isBatch.boolValue];
     }
 }
 
@@ -145,7 +147,7 @@
             [params addEntriesFromDictionary:details];
         }
         params[kScreenViewed] = screenName;
-        [[BlueShift sharedInstance] trackEventForEventName:kEventPageLoad andParameters:[self addRNSDKVersionString:params] canBatchThisEvent:isBatch.boolValue];
+        [[BlueShift sharedInstance] trackEventForEventName:kEventPageLoad andParameters:[self addFLSDKVersionString:params] canBatchThisEvent:isBatch.boolValue];
     }
 }
 
@@ -397,7 +399,7 @@
 }
 
 #pragma mark - Helper methods
-- (NSDictionary *)addRNSDKVersionString: (NSDictionary*) details {
+- (NSDictionary *)addFLSDKVersionString: (NSDictionary*) details {
     NSString *sdkVersion = [NSString stringWithFormat:@"%@-FL-%@",kBlueshiftSDKVersion,kBlueshiftFlutterSDKVersion];
     if ([details isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *dict = [details mutableCopy];
