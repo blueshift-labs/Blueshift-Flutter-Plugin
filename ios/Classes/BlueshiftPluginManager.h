@@ -38,6 +38,10 @@
 /// @param options options from the AppDelegate's OpenURL method
 - (BOOL)isBlueshiftOpenURLLink:(NSURL*_Nullable)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *_Nullable)options;
 
+/// Checks if the URL is from Blueshift or not.
+/// @param url URL from the AppDelegate's OpenURL method.
+- (BOOL)isBlueshiftUniversalLinkURL:(NSURL*_Nullable)url;
+
 @end
 
 @interface NSObject (BlueshiftReactAutoIntegration)
