@@ -45,6 +45,13 @@ static BlueshiftPluginManager *_sharedInstance = nil;
     return NO;
 }
 
+- (BOOL)isBlueshiftUniversalLinkURL:(NSURL*)url {
+    if (url && ([BlueShift.sharedInstance isBlueshiftUniversalLinkURL:url] || [url.absoluteString rangeOfString:kUniversalLinkShortURLKey].location != NSNotFound)) {
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 @implementation NSObject (BlueshiftReactAutoIntegration)
@@ -252,18 +259,16 @@ static BlueshiftPluginManager *_sharedInstance = nil;
 
 #pragma mark - Universal links method
 - (void)blueshift_swizzled_no_application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
-    if(userActivity && userActivity.webpageURL) {
-        if ([BlueShift.sharedInstance isBlueshiftUniversalLinkURL:userActivity.webpageURL]) {
-            [[BlueShift sharedInstance].appDelegate handleBlueshiftUniversalLinksForActivity:userActivity];
-        }
+    if(userActivity && [BlueshiftPluginManager.sharedInstance isBlueshiftUniversalLinkURL:userActivity.webpageURL]) {
+        [[BlueShift sharedInstance].appDelegate handleBlueshiftUniversalLinksForActivity:userActivity];
     }
 }
 
 - (void)blueshift_swizzled_application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
-    NSURL *url = [userActivity.webpageURL copy];
+    NSURL *url = userActivity ? [userActivity.webpageURL copy] : nil;
     [self blueshift_swizzled_application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
     
-    if([[BlueShift sharedInstance] isBlueshiftUniversalLinkURL:userActivity.webpageURL] == YES) {
+    if([BlueshiftPluginManager.sharedInstance isBlueshiftUniversalLinkURL:url]) {
         [[BlueShift sharedInstance].appDelegate handleBlueshiftUniversalLinksForURL:url];
     }
 }

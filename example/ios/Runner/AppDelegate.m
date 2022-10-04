@@ -107,7 +107,7 @@
 //- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
 // restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
 //    // Check if the received URL is Blueshift universal link URL, then pass it to Blueshift plugin to handle it.
-//    if ([[BlueShift sharedInstance] isBlueshiftUniversalLinkURL:userActivity.webpageURL] == YES) {
+//    if ([[BlueshiftPluginManager sharedInstance] isBlueshiftUniversalLinkURL:userActivity.webpageURL] == YES) {
 //        [[BlueShift sharedInstance].appDelegate handleBlueshiftUniversalLinksForActivity:userActivity];
 //    } else {
 //        // If the activity is not from Blueshift, let Flutter handle it

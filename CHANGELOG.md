@@ -1,3 +1,7 @@
+## 0.0.2-beta
+
+- Added helper method `isBlueshiftUniversalLinkURL` in PluginManager class for iOS
+
 ## 0.0.1-beta
 
 - First beta version of Blueshift Flutter Plugin
