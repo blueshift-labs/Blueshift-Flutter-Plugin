@@ -44,7 +44,7 @@
 
 @end
 
-@interface NSObject (BlueshiftReactAutoIntegration)
+@interface NSObject (BlueshiftFlutterAutoIntegration)
 
 + (void)swizzleMainAppDelegate;
 

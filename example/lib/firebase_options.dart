@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyApYrwWSQ8ExtRz0_M2b_QN-3XmEDNWxvU',
+    apiKey: 'some api key',
     appId: '1:62519831960:android:92b0e8190f510831',
     messagingSenderId: '62519831960',
     projectId: 'blueshift-reads-app',
@@ -59,13 +59,13 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCcUNLoOPsad0Y2T95SRtcDTXWKeOzIW1E',
+    apiKey: 'some api key',
     appId: '1:62519831960:ios:fca4a3c5568da0f9028fed',
     messagingSenderId: '62519831960',
     projectId: 'blueshift-reads-app',
     databaseURL: 'https://blueshift-reads-app.firebaseio.com',
     storageBucket: 'blueshift-reads-app.appspot.com',
-    iosClientId: '62519831960-aa1m6pnhp0prsjc7nllsf0n4li4fl1u0.apps.googleusercontent.com',
+    iosClientId: 'some id',
     iosBundleId: 'com.blueshift.reads',
   );
 }
