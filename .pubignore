@@ -28,5 +28,5 @@
 .packages
 build/
 
-# Ignore the sample app
-/example/**
+# Ignore the pods from sample app
+**/Pods/**

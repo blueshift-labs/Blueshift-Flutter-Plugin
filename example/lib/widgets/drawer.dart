@@ -44,8 +44,7 @@ class _MyDrawerState extends State<MyDrawer> {
               title: const Text("Send Push",
                   style: TextStyle(color: Colors.white)),
               onTap: () {
-                Blueshift.trackCustomEvent(
-                    "bsft_send_me_push", {}, false);
+                Blueshift.trackCustomEvent("bsft_send_me_push", {}, false);
               }),
           ListTile(
               leading: const Icon(CupertinoIcons.eject, color: Colors.white),
@@ -84,8 +83,7 @@ class _MyDrawerState extends State<MyDrawer> {
               title: const Text("Send in app",
                   style: TextStyle(color: Colors.white)),
               onTap: () {
-                Blueshift.trackCustomEvent(
-                    "bsft_send_me_in_app", {}, false);
+                Blueshift.trackCustomEvent("bsft_send_me_in_app", {}, false);
               }),
           ListTile(
               leading: const Icon(CupertinoIcons.eject, color: Colors.white),

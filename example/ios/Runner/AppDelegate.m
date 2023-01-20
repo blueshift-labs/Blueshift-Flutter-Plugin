@@ -21,11 +21,11 @@
     config.enableInAppNotification = YES;
     
     // Delay push permission
-    config.enablePushNotification = NO;
+    config.enablePushNotification = YES;
+    config.debug = YES;
     
     config.userNotificationDelegate = self;
     config.blueshiftUniversalLinksDelegate = self;
-    config.appGroupID = @"group.blueshift.reads";
     config.applicationLaunchOptions = launchOptions;
     // If Automatic integration
     [BlueshiftPluginManager.sharedInstance initialisePluginWithConfig:config autoIntegrate:YES];

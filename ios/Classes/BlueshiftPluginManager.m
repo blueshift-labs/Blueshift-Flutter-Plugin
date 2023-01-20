@@ -54,7 +54,7 @@ static BlueshiftPluginManager *_sharedInstance = nil;
 
 @end
 
-@implementation NSObject (BlueshiftReactAutoIntegration)
+@implementation NSObject (BlueshiftFlutterAutoIntegration)
 
 + (void)swizzleMainAppDelegate {
     static dispatch_once_t onceToken;
