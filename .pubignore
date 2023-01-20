@@ -29,4 +29,6 @@
 build/
 
 # Ignore the pods from sample app
+**/google-services.json
+**/GoogleService-Info.plist
 **/Pods/**
