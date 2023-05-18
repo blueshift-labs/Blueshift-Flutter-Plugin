@@ -43,7 +43,7 @@ import io.flutter.plugin.common.PluginRegistry;
  */
 public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler {
     // TODO: 16/08/22 Change this value on each release.
-    private final String PLUGIN_VERSION = "1.0.0";
+    private final String PLUGIN_VERSION = "1.0.1";
     private final String TAG = "BlueshiftFlutter";
     private Activity appActivity;
     private Context appContext;
