@@ -1,6 +1,6 @@
 ## 1.0.1
 
-- iOS SDK version update to v2.3.1
+- Updated iOS SDK version to v2.3.1
 
 ## 1.0.0
 
