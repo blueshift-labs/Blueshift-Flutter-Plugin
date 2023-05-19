@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:blueshift_plugin/blueshift_inbox_message.dart';
 import 'package:flutter/services.dart';
 
 class Blueshift {
@@ -7,6 +8,8 @@ class Blueshift {
       MethodChannel('blueshift/methods');
   static const EventChannel _eventChannel =
       EventChannel('blueshift/deeplink_event');
+  static const EventChannel _inboxEventChannel =
+      EventChannel('blueshift/inbox_event');
 
   static final Blueshift _instance = Blueshift();
 
@@ -498,5 +501,39 @@ class Blueshift {
     bool hasBsftParams = uri.queryParameters.containsKey('uid') &&
         uri.queryParameters.containsKey('mid');
     return hasBsftPath && hasBsftParams;
+  }
+
+  static Future<void> syncInboxMessages() async {
+    return await _methodChannel.invokeMethod('syncInboxMessages');
+  }
+
+  static Future<int> getUnreadInboxMessageCount() async {
+    return await _methodChannel.invokeMethod('getUnreadInboxMessageCount');
+  }
+
+  static Future<List<BlueshiftInboxMessage>> getInboxMessages() async {
+    List<BlueshiftInboxMessage> messages = [];
+    List<Map<String, dynamic>> messageMaps =
+        await _methodChannel.invokeMethod('getInboxMessages');
+    for (var element in messageMaps) {
+      messages.add(BlueshiftInboxMessage.fromJson(element));
+    }
+    return messages;
+  }
+
+  static Future<void> showInboxMessage(BlueshiftInboxMessage message) async {
+    return await _methodChannel
+        .invokeMethod('showInboxMessage', {'message': message.toMap()});
+  }
+
+  static Future<void> deleteInboxMessage(BlueshiftInboxMessage message) async {
+    return await _methodChannel
+        .invokeMethod('deleteInboxMessage', {'message': message.toMap()});
+  }
+
+  static Future<void> markInboxMessageAsRead(
+      BlueshiftInboxMessage message) async {
+    return await _methodChannel
+        .invokeMethod('markInboxMessageAsRead', {'message': message.toMap()});
   }
 }
