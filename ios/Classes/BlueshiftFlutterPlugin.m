@@ -2,9 +2,11 @@
 
 #import "BlueshiftFlutterPlugin.h"
 #import "BlueShift.h"
+#import "BlueshiftInboxManager.h"
 #import "BlueshiftVersion.h"
 #import "BlueshiftNotificationConstants.h"
 #import "BlueshiftPluginManager.h"
+#import "InAppNotificationEntity.h"
 
 @interface BlueshiftFlutterPlugin()
     @property DeeplinkStreamHandler *deeplinkStreamHandler;
@@ -180,6 +182,63 @@
 - (void)displayInAppNotification {
     [[BlueShift sharedInstance] displayInAppNotification];
 }
+
+#pragma mark Inbox
+-(void)syncInboxMessages:(FlutterResult)callback {
+    [BlueshiftInboxManager syncInboxMessages:^{
+        callback(@{});
+    }];
+}
+
+-(void)getUnreadInboxMessageCount:(FlutterResult)callback {
+    [BlueshiftInboxManager getInboxUnreadMessagesCount:^(BOOL status, NSUInteger count) {
+        if (status) {
+            callback([NSNumber numberWithUnsignedInteger:count]);
+        } else {
+            callback(0);
+        }
+    }];
+}
+
+-(void)getInboxMessages:(FlutterResult)callback {
+    [BlueshiftInboxManager getCachedInboxMessagesWithHandler:^(BOOL status, NSMutableArray<BlueshiftInboxMessage *> * _Nullable messages) {
+        if (status) {
+            
+        } else {
+            
+        }
+    }];
+}
+
+- (NSDictionary *)convertMessageToDictionary:(BlueshiftInboxMessage*)message {
+    NSMutableDictionary *messageDict = [NSMutableDictionary dictionary];
+    [messageDict setValue:message.messageUUID forKey:@"messageId"];
+    [messageDict setValue:message.messagePayload forKey:@"data"];
+    [messageDict setValue:[NSNumber numberWithBool: message.readStatus] forKey:@"status"];
+    NSNumber *timestamp = [NSNumber numberWithDouble: [message.createdAtDate timeIntervalSince1970]];
+    [messageDict setValue:timestamp forKey:@"createdAt"];
+    [messageDict setValue:message.title forKey:@"title"];
+    [messageDict setValue:message.detail forKey:@"detail"];
+    [messageDict setValue:message.iconImageURL forKey:@"imageUrl"];
+    return [messageDict copy];
+}
+
+-(void)showInboxMessage:(FlutterMethodCall*)call {
+    NSDictionary *message = call.arguments[@"message"];
+
+    if ([message isKindOfClass:[NSDictionary class]]) {
+//        [BlueshiftInboxManager showNotificationForInboxMessage:<#(BlueshiftInboxMessage * _Nullable)#> inboxInAppDelegate:<#(id<BlueshiftInboxInAppNotificationDelegate> _Nullable)#>]
+    }
+}
+
+-(void)deleteInboxMessage:(FlutterMethodCall*)call {
+    NSDictionary *message = call.arguments[@"message"];
+
+    if ([message isKindOfClass:[NSDictionary class]]) {
+//        [BlueshiftInboxManager deleteInboxMessage:<#(BlueshiftInboxMessage * _Nullable)#> completionHandler:<#^(BOOL, NSString * _Nullable)handler#>]
+    }
+}
+
 
 #pragma mark Setters
 - (void)setUserInfoEmailId:(FlutterMethodCall*)call {

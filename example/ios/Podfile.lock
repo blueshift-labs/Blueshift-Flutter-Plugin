@@ -1,8 +1,8 @@
 PODS:
   - BlueShift-iOS-Extension-SDK (2.2.6)
-  - BlueShift-iOS-SDK (2.2.6)
+  - BlueShift-iOS-SDK (2.4.0)
   - blueshift_plugin (0.0.1):
-    - BlueShift-iOS-SDK (~> 2.2.6)
+    - BlueShift-iOS-SDK (= 2.4.0)
     - Flutter
   - Firebase/CoreOnly (9.2.0):
     - FirebaseCore (= 9.2.0)
@@ -105,8 +105,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BlueShift-iOS-Extension-SDK: 81a015dacc87f18a330369ea3fd2769408fe493c
-  BlueShift-iOS-SDK: 2bbf775d89314c0cc66489dfbbfc85a1aad2e05a
-  blueshift_plugin: fc049357d58c7ce6c75a7e89e355c322ee94ca3c
+  BlueShift-iOS-SDK: e9349f0ebce9829d3285b2a4016e822a7ae19269
+  blueshift_plugin: bf293a7dccb30f670506757717bacda0af7f2af8
   Firebase: 4ba896cb8e5105d4b9e247e1c1b6222b548df55a
   firebase_core: 9e09bbfbf5467e459822850732f5fb648f5b1927
   firebase_messaging: 405f36f22122866761e7ba7aa1dcecbae09ef836
@@ -123,4 +123,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ecfe9bdde1b8a9aa417819c18ed707d4f41f813c
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
