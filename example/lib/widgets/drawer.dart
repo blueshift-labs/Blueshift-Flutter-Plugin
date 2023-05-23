@@ -2,6 +2,8 @@ import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/routes.dart';
+
 class MyDrawer extends StatefulWidget {
   var email = "";
   var name = "";

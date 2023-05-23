@@ -26,6 +26,17 @@ class Blueshift {
     return _eventChannel.receiveBroadcastStream().cast<String>();
   }
 
+  /// Get the [Stream] of Inbox data chnage events.
+  ///
+  /// ```dart
+  /// Blueshift.getInstance.onInboxDataChanged.listen((String event) {
+  ///   Reload the inbox screen
+  /// });
+  /// ```
+  Stream<String> get onInboxDataChanged {
+    return _inboxEventChannel.receiveBroadcastStream().cast<String>();
+  }
+
   /// Returns the deep link URL, that caused the app launch from killed state.
   ///
   /// ```dart
@@ -512,13 +523,15 @@ class Blueshift {
   }
 
   static Future<List<BlueshiftInboxMessage>> getInboxMessages() async {
-    List<BlueshiftInboxMessage> messages = [];
-    List<Map<String, dynamic>> messageMaps =
-        await _methodChannel.invokeMethod('getInboxMessages');
-    for (var element in messageMaps) {
-      messages.add(BlueshiftInboxMessage.fromJson(element));
+    List<BlueshiftInboxMessage> parsedMessages = [];
+    dynamic response = await _methodChannel.invokeMethod('getInboxMessages');
+    var messagesMap = Map<String, dynamic>.from(response);
+    var messages = List<dynamic>.from(messagesMap["messages"]);
+    for (var msg in messages) {
+      var map = Map<String, dynamic>.from(msg);
+      parsedMessages.add(BlueshiftInboxMessage.fromJson(map));
     }
-    return messages;
+    return parsedMessages;
   }
 
   static Future<void> showInboxMessage(BlueshiftInboxMessage message) async {
