@@ -7,6 +7,7 @@ class BlueshiftInboxMessage {
   String? status;
   final Map? data;
   final DateTime? createdAt;
+  final String? objectId;
 
   BlueshiftInboxMessage({
     this.id,
@@ -17,6 +18,7 @@ class BlueshiftInboxMessage {
     this.status,
     this.data,
     this.createdAt,
+    this.objectId,
   });
 
   BlueshiftInboxMessage.fromJson(Map data)
@@ -30,6 +32,7 @@ class BlueshiftInboxMessage {
           data: data["data"],
           createdAt: DateTime.fromMicrosecondsSinceEpoch(
               (data["createdAt"] as int) * 1000000),
+          objectId: data["objectId"],
         );
 
   Map<String, dynamic> toMap() {
@@ -45,6 +48,7 @@ class BlueshiftInboxMessage {
       'data': data,
       'status': status,
       'createdAt': sec,
+      'objectId': objectId,
     };
   }
 }

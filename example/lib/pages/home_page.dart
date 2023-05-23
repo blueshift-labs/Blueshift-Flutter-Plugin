@@ -4,6 +4,7 @@ import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/routes.dart';
 import '../widgets/drawer.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -31,6 +32,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final _deviceIdController = TextEditingController();
 
   late StreamSubscription<String> deepLinkStream;
+  late StreamSubscription<String> inboxEventStream;
+
+  Future<int>? messageCountFuture = Blueshift.getUnreadInboxMessageCount();
 
   @override
   void initState() {
@@ -39,7 +43,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     deepLinkStream = Blueshift.getInstance.onDeepLinkReceived.listen(
       (String event) {
+        print("deep link");
         navigateToDeepLinkPage(event);
+      },
+    );
+    inboxEventStream = Blueshift.getInstance.onInboxDataChanged.listen(
+      (String event) {
+        setState(() {
+          print("sync complete");
+          messageCountFuture = Blueshift.getUnreadInboxMessageCount();
+        });
       },
     );
     handleInitialURL();
@@ -81,6 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
     navigateToDeepLinkPage(url);
   }
 
+  void showInbox() {
+    Navigator.pushNamed(context, MyRoutes.inboxRoute);
+  }
+
+  void syncInbox() {
+    Blueshift.syncInboxMessages();
+  }
+
   navigateToDeepLinkPage(String url) {
     if (url.isNotEmpty) {
       Navigator.push(
@@ -104,7 +125,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text("Home Page")),
+        appBar: AppBar(title: const Text("Home Page"), actions: [
+          FutureBuilder<int>(
+            future: messageCountFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(); // Display nothing while loading
+              } else if (snapshot.hasError) {
+                return Text(
+                    'Error'); // Display error message if there is an error
+              } else {
+                final messageCount = snapshot.data;
+                return Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showInbox();
+                      },
+                      icon: Icon(Icons.message),
+                    ),
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          messageCount.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ]),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -530,6 +594,30 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: style,
+                                  onPressed: () {
+                                    showInbox();
+                                  },
+                                  child: const Text("Show Inbox"),
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: style,
+                                  onPressed: () {
+                                    syncInbox();
+                                  },
+                                  child: const Text("Sync Inbox"),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
