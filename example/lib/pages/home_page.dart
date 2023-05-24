@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
@@ -32,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _deviceIdController = TextEditingController();
 
   late StreamSubscription<String> deepLinkStream;
-  late StreamSubscription<String> inboxEventStream;
+  late StreamSubscription<String> inboxStream;
 
   Future<int>? messageCountFuture = Blueshift.getUnreadInboxMessageCount();
 
@@ -47,12 +48,14 @@ class _MyHomePageState extends State<MyHomePage> {
         navigateToDeepLinkPage(event);
       },
     );
-    inboxEventStream = Blueshift.getInstance.onInboxDataChanged.listen(
+
+    inboxStream = Blueshift.getInstance.onInboxDataChanged.listen(
       (String event) {
-        setState(() {
-          print("sync complete");
-          messageCountFuture = Blueshift.getUnreadInboxMessageCount();
-        });
+        if (event == "SyncCompleteEvent") {
+          setState(() {
+            messageCountFuture = Blueshift.getUnreadInboxMessageCount();
+          });
+        }
       },
     );
     handleInitialURL();
@@ -62,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void deactivate() {
     super.deactivate();
     deepLinkStream.cancel();
+    inboxStream.cancel();
     _custIdController.dispose();
     _lastNameController.dispose();
     _deviceIdController.dispose();
@@ -600,18 +604,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: ElevatedButton(
                                   style: style,
                                   onPressed: () {
-                                    showInbox();
-                                  },
-                                  child: const Text("Show Inbox"),
-                                ),
-                              ),
-                            ),
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  style: style,
-                                  onPressed: () {
                                     syncInbox();
                                   },
                                   child: const Text("Sync Inbox"),
@@ -627,12 +619,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            hintText: "Current Device id",
-                            label: Text("Current Device Id"),
-                          ),
-                          controller: _deviceIdController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Device Id",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Card(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Current Device id",
+                                    label: Text("Current Device Id"),
+                                  ),
+                                  controller: _deviceIdController,
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: style,
+                                  onPressed: () {
+                                    Blueshift.resetDeviceId();
+                                  },
+                                  child: const Text("Reset Device Id"),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),

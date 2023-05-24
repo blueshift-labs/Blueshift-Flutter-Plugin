@@ -549,4 +549,8 @@ class Blueshift {
     return await _methodChannel
         .invokeMethod('markInboxMessageAsRead', {'message': message.toMap()});
   }
+
+  static Future<void> showInboxiOS() {
+    return _methodChannel.invokeMethod('showInboxForiOS', {});
+  }
 }
