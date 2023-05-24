@@ -17,7 +17,7 @@
 
 - (void)initialiseBlueshiftWithLaunchOptions:(NSDictionary*)launchOptions {
     BlueShiftConfig *config = [[BlueShiftConfig alloc] init];
-    config.apiKey = @"API_KEY";
+    config.apiKey = @"";
     config.enableInAppNotification = YES;
     config.enableMobileInbox = YES;
     // Delay push permission
