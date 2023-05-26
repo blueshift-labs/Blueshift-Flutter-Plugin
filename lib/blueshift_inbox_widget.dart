@@ -24,8 +24,9 @@ class BlueshiftInboxWidget extends StatefulWidget {
 }
 
 class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<BlueshiftInboxWidget> {
   Future<List<BlueshiftInboxMessage>> messages = Blueshift.getInboxMessages();
+
   late StreamSubscription<String> inboxEventStream;
   bool isLoading = false;
 
@@ -36,13 +37,6 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
     Blueshift.showInboxMessage(message);
   }
 
-  void deleteMessage(BlueshiftInboxMessage message) {
-    Blueshift.deleteInboxMessage(message);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Deleted ${message.title}')),
-    );
-  }
-
   void reloadInbox() async {
     setState(() {
       messages = Blueshift.getInboxMessages();
@@ -50,7 +44,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
   }
 
   Future<void> refreshList() async {
-    reloadInbox();
+    Blueshift.syncInboxMessages();
   }
 
   @override
@@ -120,10 +114,16 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
                             .messageId!), // Provide a unique key for each item
                         onDismissed: (direction) {
                           // Handle the dismiss event here
-                          deleteMessage(item);
-                          setState(() {
-                            items.removeAt(
-                                index); // Remove the item from the data list
+                          Blueshift.deleteInboxMessage(item).then((value) {
+                            setState(() {
+                              items.removeAt(
+                                  index); // Remove the item from the data list
+                            });
+                          }).onError((error, stackTrace) {
+                            reloadInbox();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(error.toString())),
+                            );
                           });
                         },
                         background: Container(
@@ -163,8 +163,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (items[index].detail != "" &&
-                                  items[index].detail != null)
+                              if (items[index].detail != null)
                                 Text(
                                   items[index].detail!.trim(),
                                   style: TextStyle(

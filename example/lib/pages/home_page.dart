@@ -330,6 +330,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Blueshift.removeUserInfo();
+                                    Blueshift.resetDeviceId();
                                     Navigator.pop(context);
                                   },
                                   style: style,
