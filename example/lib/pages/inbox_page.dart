@@ -10,7 +10,13 @@ class InboxPage extends StatelessWidget {
       ),
       home: Scaffold(
           appBar: AppBar(
-            title: Text('My Inbox'),
+            title: const Text('My Inbox'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ),
           body: const BlueshiftInboxWidget(
               titleTextColor: Colors.black,

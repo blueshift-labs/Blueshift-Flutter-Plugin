@@ -25,9 +25,9 @@ class BlueshiftInboxMessage {
       : this(
           id: data["id"],
           messageId: data["messageId"],
-          title: data["title"],
-          detail: data["detail"],
-          imageUrl: data["imageUrl"],
+          title: data["title"] == "" ? null : data["title"],
+          detail: data["detail"] == "" ? null : data["detail"],
+          imageUrl: data["imageUrl"] == "" ? null : data["imageUrl"],
           status: data["status"],
           data: data["data"],
           createdAt: DateTime.fromMicrosecondsSinceEpoch(
