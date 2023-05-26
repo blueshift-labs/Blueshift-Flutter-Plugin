@@ -23,6 +23,7 @@
     // Delay push permission
     config.enablePushNotification = YES;
     config.debug = YES;
+    config.enableMobileInbox = YES;
     
     config.userNotificationDelegate = self;
     config.blueshiftUniversalLinksDelegate = self;

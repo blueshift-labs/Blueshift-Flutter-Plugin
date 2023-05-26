@@ -278,14 +278,6 @@
             message.objectId = [BlueShift.sharedInstance.appDelegate.inboxMOContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
         }
     }
-//    NSString* status = message.readStatus ? @"read" : @"unread";
-//    [messageDict setValue:status forKey:@"status"];
-//    double miliseconds = [message.createdAtDate timeIntervalSince1970] * 1000;
-//    NSNumber *timestamp = [NSNumber numberWithDouble: miliseconds];
-//    [messageDict setValue:timestamp forKey:@"createdAt"];
-//    [messageDict setValue:message.title forKey:@"title"];
-//    [messageDict setValue:message.detail forKey:@"detail"];
-//    [messageDict setValue:message.iconImageURL forKey:@"imageUrl"];
     return message;
 }
 
@@ -305,7 +297,7 @@
             if (status) {
                 callback([NSNumber numberWithBool:YES]);
             } else {
-                FlutterError *error = [FlutterError errorWithCode:@"delete_error" message:errMsg details:nil];
+                FlutterError *error = [FlutterError errorWithCode:@"error" message:errMsg details:nil];
                 callback(error);
             }
         }];
