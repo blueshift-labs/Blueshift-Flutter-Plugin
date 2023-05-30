@@ -26,7 +26,7 @@ class BlueshiftInboxMessage {
           id: data["id"],
           messageId: data["messageId"],
           title: data["title"] == "" ? null : data["title"],
-          detail: data["detail"] == "" ? null : data["detail"],
+          detail: data["detail"] == "" ? null : data["details"],
           imageUrl: data["imageUrl"] == "" ? null : data["imageUrl"],
           status: data["status"],
           data: data["data"],
