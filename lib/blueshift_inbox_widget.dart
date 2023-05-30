@@ -30,28 +30,48 @@ class BlueshiftInboxWidget extends StatefulWidget {
   _BlueshiftInboxWidgetState createState() => _BlueshiftInboxWidgetState();
 }
 
-class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
-    with AutomaticKeepAliveClientMixin<BlueshiftInboxWidget> {
-  Future<List<BlueshiftInboxMessage>> messages = Blueshift.getInboxMessages();
-
+class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   late StreamSubscription<String> inboxEventStream;
-  bool isLoading = false;
+  List<BlueshiftInboxMessage> _inboxMessages = [];
+  bool _isInboxLoading = false;
+  bool _isInAppLoading = false;
+
+  refreshInboxMessages() {
+    setState(() => _isInboxLoading = true);
+    Blueshift.getInboxMessages().then((messages) {
+      setState(() {
+        _inboxMessages = messages;
+        _isInboxLoading = false;
+      });
+    });
+  }
+
+  Widget inboxWithLoader() {
+    return _isInboxLoading == true
+        ? const Center(child: CircularProgressIndicator())
+        : inboxContainer();
+  }
+
+  Widget inboxContainer() {
+    return _inboxMessages.isEmpty
+        ? Center(child: widget.placeholder ?? const SizedBox.shrink())
+        : inbox(_inboxMessages);
+  }
+
+  Widget swipeToRefresh() {
+    return RefreshIndicator(
+      child: inboxContainer(),
+      onRefresh: () {
+        refreshInboxMessages();
+        return Future.value();
+      },
+    );
+  }
 
   void showInboxMessage(BlueshiftInboxMessage message) {
-    setState(() => isLoading = true);
+    setState(() => _isInAppLoading = true);
     Blueshift.showInboxMessage(message);
   }
-
-  void reloadInbox() async {
-    setState(() => messages = Blueshift.getInboxMessages());
-  }
-
-  Future<void> refreshList() async {
-    Blueshift.syncInboxMessages();
-  }
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -59,15 +79,14 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
     inboxEventStream = Blueshift.getInstance.onInboxDataChanged.listen(
       (String event) {
         if (event == "SyncCompleteEvent") {
-          reloadInbox();
+          refreshInboxMessages();
         } else if (event == "InAppLoadEvent") {
-          setState(() {
-            isLoading = false;
-          });
+          setState(() => _isInAppLoading = false);
         }
       },
     );
-    Blueshift.syncInboxMessages();
+
+    refreshInboxMessages();
   }
 
   @override
@@ -118,7 +137,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
                 inboxMessages.removeAt(index);
               });
             }).onError((error, stackTrace) {
-              reloadInbox();
+              refreshInboxMessages();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(error.toString())),
               );
@@ -133,9 +152,9 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
             dateString: formatDate(createdAt),
             titleTextStyle: widget.titleTextStyle ??
                 DefaultTextStyle.of(context).style.copyWith(
-                    fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.black),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
             detailsTextStyle: widget.detailTextStyle ??
                 DefaultTextStyle.of(context)
                     .style
@@ -154,42 +173,11 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Scaffold(
       body: Stack(
         children: [
-          RefreshIndicator(
-            onRefresh: refreshList,
-            child: FutureBuilder<List<BlueshiftInboxMessage>>(
-              future: messages,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // While waiting for the data, display a loading indicator
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  // If an error occurred while fetching the data, display an error message
-                  return Center(
-                    child: kDebugMode
-                        ? Text('Error occurred: ${snapshot.error}')
-                        : widget.placeholder ?? const SizedBox.shrink(),
-                  );
-                } else {
-                  // If the data was successfully fetched, display it in a ListView
-                  final messages = snapshot.data;
-
-                  return messages != null && messages.isNotEmpty
-                      ? inbox(messages)
-                      : Center(
-                          child: widget.placeholder ?? const SizedBox.shrink(),
-                        );
-                }
-              },
-            ),
-          ),
-          if (Platform.isIOS && isLoading)
+          swipeToRefresh(),
+          if (Platform.isIOS && _isInAppLoading)
             Container(
               color: Theme.of(context).primaryColor.withOpacity(0),
               child: const Center(
