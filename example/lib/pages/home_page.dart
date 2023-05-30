@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late StreamSubscription<String> deepLinkStream;
   late StreamSubscription<String> inboxStream;
 
-  Future<int>? messageCountFuture = Blueshift.getUnreadInboxMessageCount();
+  Future<int>? messageCount = Blueshift.getUnreadInboxMessageCount();
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
       (String event) {
         if (event == "SyncCompleteEvent") {
           setState(() {
-            messageCountFuture = Blueshift.getUnreadInboxMessageCount();
+            messageCount = Blueshift.getUnreadInboxMessageCount();
           });
         }
       },
@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       home: Scaffold(
         appBar: AppBar(title: const Text("Home Page"), actions: [
           FutureBuilder<int>(
-            future: messageCountFuture,
+            future: messageCount,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(); // Display nothing while loading
