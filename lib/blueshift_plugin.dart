@@ -4,6 +4,8 @@ import 'package:blueshift_plugin/blueshift_inbox_message.dart';
 import 'package:flutter/services.dart';
 
 class Blueshift {
+  final StreamController<String> _inboxStreamController =
+      StreamController<String>.broadcast();
   static const MethodChannel _methodChannel =
       MethodChannel('blueshift/methods');
   static const EventChannel _eventChannel =
@@ -14,6 +16,13 @@ class Blueshift {
   static final Blueshift _instance = Blueshift();
 
   static Blueshift get getInstance => _instance;
+
+  Blueshift() {
+    _inboxEventChannel
+        .receiveBroadcastStream()
+        .cast<String>()
+        .listen((event) => _inboxStreamController.sink.add(event));
+  }
 
   /// Get the [Stream] of deep link URLs from push, in-app, and email.
   ///
@@ -26,7 +35,8 @@ class Blueshift {
     return _eventChannel.receiveBroadcastStream().cast<String>();
   }
 
-  /// Get the [Stream] of Inbox data chnage events.
+  /// Get the [Stream] of Inbox data change events. An event is fired to this stream when
+  /// any data change happens at the Inbox messages.
   ///
   /// ```dart
   /// Blueshift.getInstance.onInboxDataChanged.listen((String event) {
@@ -34,7 +44,7 @@ class Blueshift {
   /// });
   /// ```
   Stream<String> get onInboxDataChanged {
-    return _inboxEventChannel.receiveBroadcastStream().cast<String>();
+    return _inboxStreamController.stream.cast<String>();
   }
 
   /// Returns the deep link URL, that caused the app launch from killed state.
@@ -514,14 +524,28 @@ class Blueshift {
     return hasBsftPath && hasBsftParams;
   }
 
+  ///Sync Blueshift Inbox messages on the local cache.
+  ///This will sync new messges, delete the expired messages, and update the unread status
+  ///of the message to the locally cached messges.
+  ///```dart
+  /// Blueshift.syncInboxMessages()
+  /// ```
   static Future<void> syncInboxMessages() async {
     return await _methodChannel.invokeMethod('syncInboxMessages');
   }
 
+  ///Get unread messages count to show on the notification badge.
+  ///```dart
+  ///  Future<int>? messageCount = Blueshift.getUnreadInboxMessageCount();
+  ///```
   static Future<int> getUnreadInboxMessageCount() async {
     return await _methodChannel.invokeMethod('getUnreadInboxMessageCount');
   }
 
+  ///Get inbox messages list to show in the list view.
+  ///```dart
+  ///  Future<List<BlueshiftInboxMessage>> messages = Blueshift.getInboxMessages();
+  ///```
   static Future<List<BlueshiftInboxMessage>> getInboxMessages() async {
     List<BlueshiftInboxMessage> parsedMessages = [];
     dynamic response = await _methodChannel.invokeMethod('getInboxMessages');
@@ -534,23 +558,25 @@ class Blueshift {
     return parsedMessages;
   }
 
+  ///Show in-app notification for the Inbox message.
+  ///```dart
+  /// Blueshift.showInboxMessage(message);
+  /// ```
   static Future<void> showInboxMessage(BlueshiftInboxMessage message) async {
     return await _methodChannel
         .invokeMethod('showInboxMessage', {'message': message.toMap()});
   }
 
+  ///Delete inbox message.
+  ///```dart
+  ///      Blueshift.deleteInboxMessage(item).then((value) {
+  ///           //handle success
+  ///      }).onError((error, stackTrace) {
+  ///           //handle error
+  ///      });
+  /// ```
   static Future<void> deleteInboxMessage(BlueshiftInboxMessage message) async {
     return await _methodChannel
         .invokeMethod('deleteInboxMessage', {'message': message.toMap()});
-  }
-
-  static Future<void> markInboxMessageAsRead(
-      BlueshiftInboxMessage message) async {
-    return await _methodChannel
-        .invokeMethod('markInboxMessageAsRead', {'message': message.toMap()});
-  }
-
-  static Future<void> showInboxiOS() {
-    return _methodChannel.invokeMethod('showInboxForiOS', {});
   }
 }
