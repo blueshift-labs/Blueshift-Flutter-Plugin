@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:blueshift_plugin/blueshift_inbox_message.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BlueshiftInboxWidget extends StatefulWidget {
@@ -13,6 +12,8 @@ class BlueshiftInboxWidget extends StatefulWidget {
   final Color unreadIndicatorColor;
   final Color dividerColor;
   final Widget? placeholder;
+  final Widget? loadingIndicator;
+  final Widget Function(BlueshiftInboxMessage)? inboxItem;
   final String Function(DateTime)? dateFormatter;
 
   const BlueshiftInboxWidget({
@@ -23,6 +24,8 @@ class BlueshiftInboxWidget extends StatefulWidget {
     this.unreadIndicatorColor = const Color(0xFF00C1C1),
     this.dividerColor = const Color(0xFF9A9A9A),
     this.placeholder = const SizedBox.shrink(),
+    this.loadingIndicator = const CircularProgressIndicator(),
+    this.inboxItem,
     this.dateFormatter,
   }) : super(key: key);
 
@@ -46,26 +49,32 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     });
   }
 
-  Widget inboxWithLoader() {
+  Widget inboxWrapper() {
     return _isInboxLoading == true
-        ? const Center(child: CircularProgressIndicator())
-        : inboxContainer();
+        ? inboxLoadingIndicator()
+        : inboxWithSwipeToRefresh();
   }
 
-  Widget inboxContainer() {
-    return _inboxMessages.isEmpty
-        ? Center(child: widget.placeholder ?? const SizedBox.shrink())
-        : inbox(_inboxMessages);
+  Widget inboxLoadingIndicator() {
+    return Center(
+      child: widget.loadingIndicator ?? const CircularProgressIndicator(),
+    );
   }
 
-  Widget swipeToRefresh() {
+  Widget inboxWithSwipeToRefresh() {
     return RefreshIndicator(
-      child: inboxContainer(),
+      child: inboxWithPlaceholder(),
       onRefresh: () {
         refreshInboxMessages();
         return Future.value();
       },
     );
+  }
+
+  Widget inboxWithPlaceholder() {
+    return _inboxMessages.isEmpty
+        ? Center(child: widget.placeholder ?? const SizedBox.shrink())
+        : inbox(_inboxMessages);
   }
 
   void showInboxMessage(BlueshiftInboxMessage message) {
@@ -86,7 +95,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
       },
     );
 
-    refreshInboxMessages();
+    Blueshift.syncInboxMessages();
   }
 
   @override
@@ -120,53 +129,50 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
       itemBuilder: (context, index) {
         final inboxMessage = inboxMessages[index];
 
-        final String? title = inboxMessage.title;
-        final String? details = inboxMessage.detail;
-        final String? imageUrl = inboxMessage.imageUrl;
-        final String? status = inboxMessage.status;
-        final DateTime? createdAt = inboxMessage.createdAt;
-
         return Dismissible(
-          // Provide a unique key for each item
-          key: Key(inboxMessage.messageId!),
-          onDismissed: (direction) {
-            // Handle the dismiss event here
-            Blueshift.deleteInboxMessage(inboxMessage).then((value) {
-              setState(() {
-                // Remove the item from the data list
-                inboxMessages.removeAt(index);
+            // Provide a unique key for each item
+            key: Key(inboxMessage.messageId),
+            onDismissed: (direction) {
+              // Handle the dismiss event here
+              Blueshift.deleteInboxMessage(inboxMessage).then((value) {
+                setState(() {
+                  // Remove the item from the data list
+                  inboxMessages.removeAt(index);
+                });
+              }).onError((error, stackTrace) {
+                refreshInboxMessages();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(error.toString())),
+                );
               });
-            }).onError((error, stackTrace) {
-              refreshInboxMessages();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(error.toString())),
-              );
-            });
-          },
-          background: const DismissibleBackground(),
-          child: InboxListItem(
-            title: title ?? "",
-            details: details ?? "",
-            imageUrl: imageUrl ?? "",
-            status: status ?? "",
-            dateString: formatDate(createdAt),
-            titleTextStyle: widget.titleTextStyle ??
-                DefaultTextStyle.of(context).style.copyWith(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-            detailsTextStyle: widget.detailTextStyle ??
-                DefaultTextStyle.of(context)
-                    .style
-                    .copyWith(fontSize: 14, color: Colors.black),
-            dateTextStyle: widget.dateTextStyle ??
-                DefaultTextStyle.of(context)
-                    .style
-                    .copyWith(fontSize: 12, color: Colors.black45),
-            unreadIndicatorColor: widget.unreadIndicatorColor,
-            onTap: () => showInboxMessage(inboxMessage),
-          ),
-        );
+            },
+            background: const DismissibleBackground(),
+            child: InkWell(
+              onTap: () => showInboxMessage(inboxMessage),
+              child: widget.inboxItem != null
+                  ? widget.inboxItem!(inboxMessage)
+                  : DefaultInboxListItem(
+                      title: inboxMessage.title,
+                      details: inboxMessage.details,
+                      imageUrl: inboxMessage.imageUrl,
+                      status: inboxMessage.status,
+                      dateString: formatDate(inboxMessage.createdAt),
+                      titleTextStyle: widget.titleTextStyle ??
+                          DefaultTextStyle.of(context).style.copyWith(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                      detailsTextStyle: widget.detailTextStyle ??
+                          DefaultTextStyle.of(context)
+                              .style
+                              .copyWith(fontSize: 14, color: Colors.black),
+                      dateTextStyle: widget.dateTextStyle ??
+                          DefaultTextStyle.of(context)
+                              .style
+                              .copyWith(fontSize: 12, color: Colors.black45),
+                      unreadIndicatorColor: widget.unreadIndicatorColor,
+                    ),
+            ));
       },
     );
   }
@@ -176,13 +182,11 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     return Scaffold(
       body: Stack(
         children: [
-          swipeToRefresh(),
+          inboxWithSwipeToRefresh(),
           if (Platform.isIOS && _isInAppLoading)
             Container(
               color: Theme.of(context).primaryColor.withOpacity(0),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: inboxLoadingIndicator(),
             ),
         ],
       ),
@@ -190,7 +194,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   }
 }
 
-class InboxListItem extends StatelessWidget {
+class DefaultInboxListItem extends StatelessWidget {
   final String title;
   final String details;
   final String imageUrl;
@@ -203,21 +207,18 @@ class InboxListItem extends StatelessWidget {
 
   final Color unreadIndicatorColor;
 
-  final void Function()? onTap;
-
-  const InboxListItem(
-      {Key? key,
-      required this.title,
-      required this.details,
-      required this.imageUrl,
-      required this.status,
-      required this.dateString,
-      this.titleTextStyle,
-      this.detailsTextStyle,
-      this.dateTextStyle,
-      required this.unreadIndicatorColor,
-      required this.onTap})
-      : super(key: key);
+  const DefaultInboxListItem({
+    Key? key,
+    required this.title,
+    required this.details,
+    required this.imageUrl,
+    required this.status,
+    required this.dateString,
+    this.titleTextStyle,
+    this.detailsTextStyle,
+    this.dateTextStyle,
+    required this.unreadIndicatorColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +258,6 @@ class InboxListItem extends StatelessWidget {
               fit: BoxFit.cover,
             )
           : null,
-      onTap: onTap,
     );
   }
 }
