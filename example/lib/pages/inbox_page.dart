@@ -25,7 +25,16 @@ class InboxPage extends StatelessWidget {
           unreadIndicatorColor: Colors.red,
           dividerColor: Colors.blueGrey,
           dateFormatter: (date) => date.toIso8601String(),
-          placeholder: const Icon(Icons.hourglass_empty),
+          placeholder: const Icon(Icons.inbox),
+          loadingIndicator: const Icon(Icons.hourglass_top),
+          // inboxItem: (msg) => Column(
+          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+          //   children: [
+          //     Text(msg.title.trim()),
+          //     Text(msg.detail),
+          //     Text(msg.imageUrl),
+          //   ],
+          // ),
         ),
       ),
     );
