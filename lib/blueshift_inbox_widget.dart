@@ -124,7 +124,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
       itemCount: inboxMessages.length,
       separatorBuilder: (context, index) => Divider(
         color: widget.dividerColor,
-        thickness: 1.0,
+        thickness: 0.5,
       ),
       itemBuilder: (context, index) {
         final inboxMessage = inboxMessages[index];
@@ -182,7 +182,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     return Scaffold(
       body: Stack(
         children: [
-          inboxWithSwipeToRefresh(),
+          inboxWrapper(),
           if (Platform.isIOS && _isInAppLoading)
             Container(
               color: Theme.of(context).primaryColor.withOpacity(0),
@@ -222,42 +222,61 @@ class DefaultInboxListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title:
-          title.isNotEmpty ? Text(title.trim(), style: titleTextStyle) : null,
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (details.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(details.trim(), style: detailsTextStyle),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: "unread" == status
+                  ? unreadIndicatorColor
+                  : Colors.transparent,
             ),
-          if (dateString.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(dateString.trim(), style: dateTextStyle),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title.isNotEmpty)
+                  Text(
+                    title.trim(),
+                    style: titleTextStyle,
+                  ),
+                if (details.isNotEmpty)
+                  Text(
+                    details.trim(),
+                    style: detailsTextStyle,
+                  ),
+                if (dateString.isNotEmpty)
+                  Text(
+                    dateString.trim(),
+                    style: dateTextStyle,
+                  ),
+              ],
             ),
-        ],
-      ),
-      trailing: "unread" == status
-          ? Container(
-              decoration: BoxDecoration(
-                color: unreadIndicatorColor,
-                shape: BoxShape.circle,
+          ),
+        ),
+        if (imageUrl.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.network(
+                imageUrl,
+                width: 56,
+                height: 56,
+                fit: BoxFit.cover,
               ),
-              width: 8,
-              height: 8,
-            )
-          : null,
-      leading: imageUrl.isNotEmpty
-          ? Image.network(
-              imageUrl,
-              width: 48,
-              height: 48,
-              fit: BoxFit.cover,
-            )
-          : null,
+            ),
+          )
+      ],
     );
   }
 }
