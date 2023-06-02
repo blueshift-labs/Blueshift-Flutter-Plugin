@@ -330,12 +330,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Blueshift.removeUserInfo();
-                                    Blueshift.resetDeviceId();
-                                    Navigator.pop(context);
                                   },
                                   style: style,
-                                  child:
-                                      const Text("Remove user data and Logout"),
+                                  child: const Text("Remove user data"),
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  style: style,
+                                  child: const Text("Logout"),
                                 ),
                               ),
                             ),
