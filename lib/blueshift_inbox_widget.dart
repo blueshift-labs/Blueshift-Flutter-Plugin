@@ -49,10 +49,12 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     });
   }
 
+  syncInboxMessages() {
+    Blueshift.syncInboxMessages().then((value) => {});
+  }
+
   Widget inboxWrapper() {
-    return _isInboxLoading == true
-        ? inboxLoadingIndicator()
-        : inboxWithSwipeToRefresh();
+    return inboxWithPullToRefresh();
   }
 
   Widget inboxLoadingIndicator() {
@@ -61,11 +63,11 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     );
   }
 
-  Widget inboxWithSwipeToRefresh() {
+  Widget inboxWithPullToRefresh() {
     return RefreshIndicator(
       child: inboxWithPlaceholder(),
       onRefresh: () {
-        refreshInboxMessages();
+        syncInboxMessages();
         return Future.value();
       },
     );
@@ -85,17 +87,16 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   @override
   void initState() {
     super.initState();
-    inboxEventStream = Blueshift.getInstance.onInboxDataChanged.listen(
-      (String event) {
-        if (event == "SyncCompleteEvent") {
-          refreshInboxMessages();
-        } else if (event == "InAppLoadEvent") {
-          setState(() => _isInAppLoading = false);
-        }
-      },
-    );
-
-    Blueshift.syncInboxMessages();
+    refreshInboxMessages();
+    inboxEventStream =
+        Blueshift.getInstance.onInboxDataChanged.listen((String event) {
+      if (event == "SyncCompleteEvent") {
+        refreshInboxMessages();
+      } else if (event == "InAppLoadEvent") {
+        setState(() => _isInAppLoading = false);
+      }
+    });
+    syncInboxMessages();
   }
 
   @override
@@ -273,6 +274,13 @@ class DefaultInboxListItem extends StatelessWidget {
                 width: 56,
                 height: 56,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Handle image load failure
+                  return const SizedBox(
+                    width: 56,
+                    height: 56,
+                  );
+                },
               ),
             ),
           )

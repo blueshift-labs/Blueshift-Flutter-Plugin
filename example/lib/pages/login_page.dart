@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Blueshift.trackScreenView("LoginScreen", {}, false);
     getUserInfo();
@@ -26,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
       emailId = await Blueshift.getUserInfoEmailId;
       username = await Blueshift.getUserInfoFirstName;
       if (emailId != null && emailId != "") {
+        emailId = "";
+        username = "";
         Navigator.pushNamed(context, MyRoutes.homeRoute);
       }
     } catch (err) {
@@ -104,7 +105,8 @@ class _LoginPageState extends State<LoginPage> {
     if (emailId != "" && emailId != null) {
       Blueshift.setUserInfoEmailId(emailId!);
       Blueshift.setUserInfoFirstName(username!);
-
+      emailId = "";
+      username = "";
       Blueshift.identifyWithDetails({
         "AppType": "flutter",
         "value": "test flutter",
