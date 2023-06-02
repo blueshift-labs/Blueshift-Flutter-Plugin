@@ -13,7 +13,6 @@
 @interface BlueshiftFlutterPlugin()
     @property BlueshiftStreamHandler *deeplinkStreamHandler;
     @property BlueshiftStreamHandler *inboxEventStreamHandler;
-
 @end
 
 @implementation BlueshiftFlutterPlugin
@@ -258,7 +257,7 @@
     NSNumber *timestamp = [NSNumber numberWithInteger: (NSInteger)seconds];
     [messageDict setValue:timestamp forKey:@"createdAt"];
     [messageDict setValue:message.title forKey:@"title"];
-    [messageDict setValue:message.detail forKey:@"detail"];
+    [messageDict setValue:message.detail forKey:@"details"];
     [messageDict setValue:message.objectId.URIRepresentation.absoluteString forKey:@"objectId"];
     NSString *imageUrl = [message.iconImageURL isEqualToString:@""]? nil : message.iconImageURL;
     [messageDict setValue:imageUrl forKey:@"imageUrl"];
