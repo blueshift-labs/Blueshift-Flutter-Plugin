@@ -74,7 +74,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
   }
 
   Widget inboxWithPlaceholder() {
-    return _inboxMessages.isEmpty ? inboxPlaceholder() : inbox(_inboxMessages);
+    return _inboxMessages.isEmpty ? inboxPlaceholder() : inbox();
   }
 
   void showInboxMessage(BlueshiftInboxMessage message) {
@@ -124,15 +124,15 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
     return formattedDate;
   }
 
-  Widget inbox(List<BlueshiftInboxMessage> inboxMessages) {
+  Widget inbox() {
     return ListView.separated(
-      itemCount: inboxMessages.length,
+      itemCount: _inboxMessages.length,
       separatorBuilder: (context, index) => Divider(
         color: widget.dividerColor,
         thickness: 0.5,
       ),
       itemBuilder: (context, index) {
-        final inboxMessage = inboxMessages[index];
+        final inboxMessage = _inboxMessages[index];
 
         return Dismissible(
             // Provide a unique key for each item
@@ -140,7 +140,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
             onDismissed: (direction) {
               // Handle the dismiss event here
               Blueshift.deleteInboxMessage(inboxMessage).then((value) {
-                setState(() => inboxMessages.removeAt(index));
+                setState(() => _inboxMessages.removeAt(index));
               }).onError((error, stackTrace) {
                 getInboxMessagesFromCache();
                 ScaffoldMessenger.of(context).showSnackBar(
