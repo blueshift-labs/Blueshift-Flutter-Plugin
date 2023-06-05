@@ -1,6 +1,7 @@
 package com.blueshift.flutter.blueshift_plugin;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -19,6 +20,8 @@ import com.blueshift.BlueshiftLinksListener;
 import com.blueshift.BlueshiftLogger;
 import com.blueshift.BuildConfig;
 import com.blueshift.fcm.BlueshiftMessagingService;
+import com.blueshift.inbox.BlueshiftInboxManager;
+import com.blueshift.inbox.BlueshiftInboxMessage;
 import com.blueshift.model.UserInfo;
 import com.blueshift.rich_push.RichPushConstants;
 import com.blueshift.util.DeviceUtils;
@@ -26,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -41,31 +45,63 @@ import io.flutter.plugin.common.PluginRegistry;
 /**
  * Blueshift Plugin
  */
-public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler {
+public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     // TODO: 16/08/22 Change this value on each release.
     private final String PLUGIN_VERSION = "1.0.1";
     private final String TAG = "BlueshiftFlutter";
     private Activity appActivity;
     private Context appContext;
-    private EventChannel deeplinkChannel;
+    private EventChannel deeplinkEventChannel;
+    private EventChannel mobileInboxEventChannel;
     private MethodChannel methodChannel;
     private ActivityPluginBinding activityPluginBinding;
-    private EventChannel.EventSink eventSink = null;
+    private EventChannel.EventSink deeplinkEventSink = null;
+    private EventChannel.EventSink inboxEventSink = null;
     private String cachedUrl = null;
     private boolean inAppOnAllScreens = false;
     private final PluginRegistry.NewIntentListener newIntentListener = intent -> {
         handleDeepLinks(intent);
         return false;
     };
+    private final BroadcastReceiver inboxDataChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            sendInboxDataChangeEvent();
+        }
+    };
 
     @Override // FlutterPlugin
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         appContext = flutterPluginBinding.getApplicationContext();
 
-        deeplinkChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
+        deeplinkEventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
+        mobileInboxEventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/inbox_event");
         methodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/methods");
 
-        deeplinkChannel.setStreamHandler(this); // EventChannel.StreamHandler
+        deeplinkEventChannel.setStreamHandler(new EventChannel.StreamHandler() {
+            @Override
+            public void onListen(Object arguments, EventChannel.EventSink events) {
+                deeplinkEventSink = events;
+            }
+
+            @Override
+            public void onCancel(Object arguments) {
+                deeplinkEventSink = null;
+            }
+        }); // EventChannel.StreamHandler
+
+        mobileInboxEventChannel.setStreamHandler(new EventChannel.StreamHandler() {
+            @Override
+            public void onListen(Object arguments, EventChannel.EventSink events) {
+                inboxEventSink = events;
+            }
+
+            @Override
+            public void onCancel(Object arguments) {
+                inboxEventSink = null;
+            }
+        }); // EventChannel.StreamHandler
+
         methodChannel.setMethodCallHandler(this); // MethodCallHandler
 
         Bundle metaData = getMetaData();
@@ -93,7 +129,8 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     @Override // FlutterPlugin
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        deeplinkChannel.setStreamHandler(null);
+        deeplinkEventChannel.setStreamHandler(null);
+        mobileInboxEventChannel.setStreamHandler(null);
         methodChannel.setMethodCallHandler(null);
     }
 
@@ -107,6 +144,8 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         if (inAppOnAllScreens) {
             Blueshift.getInstance(appContext).registerForInAppMessages(appActivity);
         }
+
+        BlueshiftInboxManager.registerForInboxBroadcasts(appActivity, inboxDataChangeReceiver);
     }
 
     private void activityCleanup() {
@@ -117,6 +156,10 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
         if (inAppOnAllScreens) {
             Blueshift.getInstance(appContext).unregisterForInAppMessages(appActivity);
+        }
+
+        if (appActivity != null) {
+            appActivity.unregisterReceiver(inboxDataChangeReceiver);
         }
 
         appActivity = null;
@@ -142,20 +185,9 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         activityCleanup();
     }
 
-
-    @Override // EventChannel.StreamHandler
-    public void onListen(Object arguments, EventChannel.EventSink events) {
-        eventSink = events;
-    }
-
-    @Override // EventChannel.StreamHandler
-    public void onCancel(Object arguments) {
-        eventSink = null;
-    }
-
     private void sendDeeplinkEvent(Uri link) {
-        if (eventSink != null) {
-            eventSink.success(link != null ? link.toString() : null);
+        if (deeplinkEventSink != null) {
+            deeplinkEventSink.success(link != null ? link.toString() : null);
         } else {
             // When eventSink is not ready, cache the URL so that the host app can call
             // getInitialUrl to get the URL whenever it wants.
@@ -306,6 +338,21 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
                 break;
             case "requestPushNotificationPermission":
                 requestPushNotificationPermission();
+                break;
+            case "getInboxMessages":
+                getInboxMessages(result);
+                break;
+            case "showInboxMessage":
+                showInboxMessage(call);
+                break;
+            case "syncInboxMessages":
+                syncInboxMessages(result);
+                break;
+            case "deleteInboxMessage":
+                deleteInboxMessage(call, result);
+                break;
+            case "getUnreadInboxMessageCount":
+                getUnreadInboxMessageCount(result);
                 break;
             default:
                 result.notImplemented();
@@ -550,5 +597,66 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     private void requestPushNotificationPermission() {
         Blueshift.requestPushNotificationPermission(appActivity);
+    }
+
+    private void getInboxMessages(Result result) {
+        BlueshiftInboxManager.getMessages(appContext, blueshiftInboxMessages -> {
+            HashMap<String, Object> resultMap = new HashMap<>();
+
+            if (blueshiftInboxMessages == null || blueshiftInboxMessages.isEmpty()) {
+                BlueshiftLogger.d(TAG, "No messages found inside Mobile Inbox.");
+
+                // return empty list
+                resultMap.put("messages", new ArrayList<>());
+                result.success(resultMap);
+            } else {
+                if (result != null) {
+                    ArrayList<HashMap<String, Object>> messageList = new ArrayList<>();
+
+                    for (BlueshiftInboxMessage message : blueshiftInboxMessages) {
+                        messageList.add(message.toHashMap());
+                    }
+
+                    resultMap.put("messages", messageList);
+                    result.success(resultMap);
+                }
+            }
+        });
+    }
+
+    private void showInboxMessage(MethodCall call) {
+        HashMap<String, Object> map = call.argument("message");
+        if (map != null) {
+            BlueshiftInboxMessage message = BlueshiftInboxMessage.fromHashMap(map);
+            BlueshiftInboxManager.displayInboxMessage(message);
+        }
+    }
+
+    private void deleteInboxMessage(MethodCall call, Result result) {
+        HashMap<String, Object> map = call.argument("message");
+        if (map != null) {
+            BlueshiftInboxMessage message = BlueshiftInboxMessage.fromHashMap(map);
+            BlueshiftInboxManager.deleteMessage(appContext, message, status -> {
+                if (status) {
+                    result.success(true);
+                } else {
+                    result.error("error", "Could not delete the message.", null);
+                }
+            });
+        }
+    }
+
+    private void syncInboxMessages(Result result) {
+        BlueshiftInboxManager.syncMessages(appContext, result::success);
+    }
+
+    private void sendInboxDataChangeEvent() {
+        if (inboxEventSink != null) {
+            inboxEventSink.success("InboxDataChangeEvent");
+        }
+    }
+
+    private void getUnreadInboxMessageCount(Result result) {
+        BlueshiftInboxManager.getUnreadMessagesCount(appContext, result::success);
     }
 }

@@ -5,7 +5,7 @@ import 'package:blueshift_plugin/blueshift_inbox_message.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:flutter/material.dart';
 
-class BlueshiftInboxWidget extends StatefulWidget {
+class BlueshiftInbox extends StatefulWidget {
   final TextStyle? titleTextStyle;
   final TextStyle? detailTextStyle;
   final TextStyle? dateTextStyle;
@@ -16,7 +16,7 @@ class BlueshiftInboxWidget extends StatefulWidget {
   final Widget Function(BlueshiftInboxMessage)? inboxItem;
   final String Function(DateTime)? dateFormatter;
 
-  const BlueshiftInboxWidget({
+  const BlueshiftInbox({
     Key? key,
     this.titleTextStyle,
     this.detailTextStyle,
@@ -30,10 +30,10 @@ class BlueshiftInboxWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BlueshiftInboxWidgetState createState() => _BlueshiftInboxWidgetState();
+  _BlueshiftInboxState createState() => _BlueshiftInboxState();
 }
 
-class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
+class _BlueshiftInboxState extends State<BlueshiftInbox> {
   late StreamSubscription<String> inboxEventStream;
   List<BlueshiftInboxMessage> _inboxMessages = [];
   bool _isInAppLoading = false;
@@ -61,10 +61,20 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     );
   }
 
+  Widget inboxPlaceholder() {
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (context, index) => SizedBox(
+        height: 200,
+        child: Center(
+          child: widget.placeholder ?? const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+
   Widget inboxWithPlaceholder() {
-    return _inboxMessages.isEmpty
-        ? Center(child: widget.placeholder ?? const SizedBox.shrink())
-        : inbox(_inboxMessages);
+    return _inboxMessages.isEmpty ? inboxPlaceholder() : inbox(_inboxMessages);
   }
 
   void showInboxMessage(BlueshiftInboxMessage message) {
@@ -73,15 +83,16 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   }
 
   StreamSubscription<String> registerForInboxDataChangeEvents() {
-    return Blueshift.getInstance.onInboxDataChanged.listen(
-      (String event) {
-        if (event == "SyncCompleteEvent") {
+    return Blueshift.getInstance.onInboxDataChanged.listen((event) {
+      switch (event) {
+        case Blueshift.kInboxDataChangeEvent:
           getInboxMessagesFromCache();
-        } else if (event == "InAppLoadEvent") {
+          break;
+        case Blueshift.kInAppLoadEvent:
           setState(() => _isInAppLoading = false);
-        }
-      },
-    );
+          break;
+      }
+    });
   }
 
   @override

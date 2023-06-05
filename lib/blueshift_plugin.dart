@@ -4,6 +4,9 @@ import 'package:blueshift_plugin/blueshift_inbox_message.dart';
 import 'package:flutter/services.dart';
 
 class Blueshift {
+  static const String kInboxDataChangeEvent = "InboxDataChangeEvent";
+  static const String kInAppLoadEvent = "InAppLoadEvent";
+
   final StreamController<String> _inboxStreamController =
       StreamController<String>.broadcast();
   static const MethodChannel _methodChannel =
