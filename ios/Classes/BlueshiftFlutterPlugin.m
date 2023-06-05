@@ -94,6 +94,9 @@
       [self setIDFA:call];
   } else if ([@"setCurrentLocation" isEqualToString:call.method]) {
      [self setCurrentLocation:call];
+  } else if ([@"getRegisteredInAppScreenName" isEqualToString:call.method]) {
+      [self getRegisteredInAppScreenName:result];
+      return;
   } else if ([@"getEnableInAppStatus" isEqualToString:call.method]) {
       [self getEnableInAppStatus:result];
       return;
@@ -390,6 +393,13 @@
 }
 
 #pragma mark Getters
+- (void)getRegisteredInAppScreenName:(FlutterResult)callback {
+    if (callback) {
+        NSString* screenName = [BlueShift.sharedInstance getRegisteredForInAppScreenName];
+        callback(screenName);
+    }
+}
+
 - (void)getEnableInAppStatus:(FlutterResult)callback {
     if (callback) {
         BOOL isEnabled = [BlueShiftAppData currentAppData].enableInApp;
