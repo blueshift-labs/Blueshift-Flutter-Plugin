@@ -137,6 +137,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
         return Dismissible(
             // Provide a unique key for each item
             key: Key(inboxMessage.messageId),
+            direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               // Handle the dismiss event here
               Blueshift.deleteInboxMessage(inboxMessage).then((value) {
