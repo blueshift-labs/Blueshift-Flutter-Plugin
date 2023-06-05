@@ -34,6 +34,6 @@ android {
     }
 
     dependencies {
-        implementation 'com.blueshift:android-sdk-x:3.3.0'
+        implementation 'com.blueshift:android-sdk-x:3.4.1-alpha'
     }
 }
