@@ -1,4 +1,4 @@
-import 'package:blueshift_plugin/blueshift_inbox_widget.dart';
+import 'package:blueshift_plugin/blueshift_inbox.dart';
 import 'package:flutter/material.dart';
 
 class InboxPage extends StatelessWidget {

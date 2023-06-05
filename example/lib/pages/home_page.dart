@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     inboxStream = Blueshift.getInstance.onInboxDataChanged.listen(
       (String event) {
-        if (event == "SyncCompleteEvent") {
+        if (event == Blueshift.kInboxDataChangeEvent) {
           setState(() {
             messageCount = Blueshift.getUnreadInboxMessageCount();
           });
