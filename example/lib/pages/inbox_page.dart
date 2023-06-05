@@ -18,15 +18,15 @@ class InboxPage extends StatelessWidget {
             },
           ),
         ),
-        body: BlueshiftInboxWidget(
-          titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-          detailTextStyle: Theme.of(context).textTheme.bodyMedium,
-          dateTextStyle: Theme.of(context).textTheme.bodySmall,
-          unreadIndicatorColor: Colors.red,
-          dividerColor: Colors.blueGrey,
-          dateFormatter: (date) => date.toIso8601String(),
-          placeholder: const Icon(Icons.inbox),
-          loadingIndicator: const Icon(Icons.hourglass_top),
+        body: const BlueshiftInbox(
+          // titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+          // detailTextStyle: Theme.of(context).textTheme.bodyMedium,
+          // dateTextStyle: Theme.of(context).textTheme.bodySmall,
+          // unreadIndicatorColor: Colors.red,
+          // dividerColor: Colors.blueGrey,
+          // dateFormatter: (date) => date.toIso8601String(),
+          // placeholder: const Text("Inbox is empty!"),
+          // loadingIndicator: const Icon(Icons.hourglass_top),
           // inboxItem: (msg) => Column(
           //   crossAxisAlignment: CrossAxisAlignment.stretch,
           //   children: [
