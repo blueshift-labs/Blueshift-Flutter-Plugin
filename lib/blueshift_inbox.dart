@@ -37,11 +37,36 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
   late StreamSubscription<String> inboxEventStream;
   List<BlueshiftInboxMessage> _inboxMessages = [];
   bool _isInAppLoading = false;
+  String? inappRegisteredScreenName;
 
   void getInboxMessagesFromCache() {
     Blueshift.getInboxMessages().then((messages) {
       setState(() => _inboxMessages = messages);
     });
+  }
+
+  void handleInitState() {
+    if (Platform.isIOS) {
+      Blueshift.getRegisteredInAppScreenName().then((screenName) {
+        if (screenName != null && screenName != "") {
+          inappRegisteredScreenName = screenName;
+          Blueshift.unregisterForInAppMessage();
+        }
+      });
+    } else if (Platform.isAndroid) {
+      //TODO: Add logic for android
+    }
+  }
+
+  void handleDispose() {
+    if (Platform.isIOS) {
+      if (inappRegisteredScreenName != null) {
+        Blueshift.registerForInAppMessage(inappRegisteredScreenName!);
+        inappRegisteredScreenName = null;
+      }
+    } else if (Platform.isAndroid) {
+      //TODO: Add logic for android
+    }
   }
 
   Future<void> getInboxMessagesFromApi() async {
@@ -98,6 +123,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
   @override
   void initState() {
     super.initState();
+    handleInitState();
     inboxEventStream = registerForInboxDataChangeEvents();
     getInboxMessagesFromCache();
     getInboxMessagesFromApi();
@@ -106,6 +132,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
   @override
   void dispose() {
     super.dispose();
+    handleDispose();
     // Remove the event listener
     inboxEventStream.cancel();
   }

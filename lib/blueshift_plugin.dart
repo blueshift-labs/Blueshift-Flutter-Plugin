@@ -117,6 +117,15 @@ class Blueshift {
     );
   }
 
+  /// Get registered screen name for in-app messages.
+  ///
+  /// ```dart
+  /// String? screenName = Blueshift.unregisterForInAppMessage();
+  /// ```
+  static Future<String?> getRegisteredInAppScreenName() async {
+    return await _methodChannel.invokeMethod('getRegisteredInAppScreenName');
+  }
+
   /// Unregister a screen for showing in-app message.
   ///
   /// ```dart
