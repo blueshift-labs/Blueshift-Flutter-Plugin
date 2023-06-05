@@ -36,25 +36,16 @@ class BlueshiftInboxWidget extends StatefulWidget {
 class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   late StreamSubscription<String> inboxEventStream;
   List<BlueshiftInboxMessage> _inboxMessages = [];
-  bool _isInboxLoading = false;
   bool _isInAppLoading = false;
 
-  refreshInboxMessages() {
-    setState(() => _isInboxLoading = true);
+  void getInboxMessagesFromCache() {
     Blueshift.getInboxMessages().then((messages) {
-      setState(() {
-        _inboxMessages = messages;
-        _isInboxLoading = false;
-      });
+      setState(() => _inboxMessages = messages);
     });
   }
 
-  syncInboxMessages() {
-    Blueshift.syncInboxMessages().then((value) => {});
-  }
-
-  Widget inboxWrapper() {
-    return inboxWithPullToRefresh();
+  Future<void> getInboxMessagesFromApi() async {
+    return await Blueshift.syncInboxMessages();
   }
 
   Widget inboxLoadingIndicator() {
@@ -66,10 +57,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
   Widget inboxWithPullToRefresh() {
     return RefreshIndicator(
       child: inboxWithPlaceholder(),
-      onRefresh: () {
-        syncInboxMessages();
-        return Future.value();
-      },
+      onRefresh: () => getInboxMessagesFromApi(),
     );
   }
 
@@ -84,19 +72,24 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     Blueshift.showInboxMessage(message);
   }
 
+  StreamSubscription<String> registerForInboxDataChangeEvents() {
+    return Blueshift.getInstance.onInboxDataChanged.listen(
+      (String event) {
+        if (event == "SyncCompleteEvent") {
+          getInboxMessagesFromCache();
+        } else if (event == "InAppLoadEvent") {
+          setState(() => _isInAppLoading = false);
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    refreshInboxMessages();
-    inboxEventStream =
-        Blueshift.getInstance.onInboxDataChanged.listen((String event) {
-      if (event == "SyncCompleteEvent") {
-        refreshInboxMessages();
-      } else if (event == "InAppLoadEvent") {
-        setState(() => _isInAppLoading = false);
-      }
-    });
-    syncInboxMessages();
+    inboxEventStream = registerForInboxDataChangeEvents();
+    getInboxMessagesFromCache();
+    getInboxMessagesFromApi();
   }
 
   @override
@@ -136,12 +129,9 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
             onDismissed: (direction) {
               // Handle the dismiss event here
               Blueshift.deleteInboxMessage(inboxMessage).then((value) {
-                setState(() {
-                  // Remove the item from the data list
-                  inboxMessages.removeAt(index);
-                });
+                setState(() => inboxMessages.removeAt(index));
               }).onError((error, stackTrace) {
-                refreshInboxMessages();
+                getInboxMessagesFromCache();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(error.toString())),
                 );
@@ -183,7 +173,7 @@ class _BlueshiftInboxWidgetState extends State<BlueshiftInboxWidget> {
     return Scaffold(
       body: Stack(
         children: [
-          inboxWrapper(),
+          inboxWithPullToRefresh(),
           if (Platform.isIOS && _isInAppLoading)
             Container(
               color: Theme.of(context).primaryColor.withOpacity(0),
@@ -274,13 +264,10 @@ class DefaultInboxListItem extends StatelessWidget {
                 width: 56,
                 height: 56,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  // Handle image load failure
-                  return const SizedBox(
-                    width: 56,
-                    height: 56,
-                  );
-                },
+                errorBuilder: (context, error, stackTrace) => const SizedBox(
+                  width: 56,
+                  height: 56,
+                ),
               ),
             ),
           )
