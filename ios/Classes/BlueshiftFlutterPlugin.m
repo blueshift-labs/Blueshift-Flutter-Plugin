@@ -43,7 +43,7 @@
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kBSInboxUnreadMessageCountDidChange object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        [self->_inboxEventStreamHandler sendData:@"SyncCompleteEvent"];
+        [self->_inboxEventStreamHandler sendData:@"InboxDataChangeEvent"];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kBSInAppNotificationDidAppear object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
