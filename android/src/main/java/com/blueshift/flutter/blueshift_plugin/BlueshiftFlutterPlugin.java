@@ -20,6 +20,7 @@ import com.blueshift.BlueshiftLinksListener;
 import com.blueshift.BlueshiftLogger;
 import com.blueshift.BuildConfig;
 import com.blueshift.fcm.BlueshiftMessagingService;
+import com.blueshift.inappmessage.InAppManager;
 import com.blueshift.inbox.BlueshiftInboxManager;
 import com.blueshift.inbox.BlueshiftInboxMessage;
 import com.blueshift.model.UserInfo;
@@ -258,6 +259,9 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
             case "unregisterForInAppMessage":
                 unregisterForInAppMessage();
                 break;
+            case "getRegisteredInAppScreenName":
+                getRegisteredInAppScreenName(result);
+                break;
             case "fetchInAppNotification":
                 fetchInAppNotification();
                 break;
@@ -436,6 +440,13 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     private void unregisterForInAppMessage() {
         Blueshift.getInstance(appContext).unregisterForInAppMessages(appActivity);
+    }
+
+    private void getRegisteredInAppScreenName(Result result) {
+        if (result != null) {
+            String val = InAppManager.getRegisteredScreenName();
+            result.success(val);
+        }
     }
 
     private void fetchInAppNotification() {

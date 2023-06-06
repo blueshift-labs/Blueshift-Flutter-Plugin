@@ -20,7 +20,7 @@ class InboxPage extends StatelessWidget {
         ),
         body: const BlueshiftInbox(
           // titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-          // detailTextStyle: Theme.of(context).textTheme.bodyMedium,
+          // detailsTextStyle: Theme.of(context).textTheme.bodyMedium,
           // dateTextStyle: Theme.of(context).textTheme.bodySmall,
           // unreadIndicatorColor: Colors.red,
           // dividerColor: Colors.blueGrey,
@@ -31,7 +31,7 @@ class InboxPage extends StatelessWidget {
           //   crossAxisAlignment: CrossAxisAlignment.stretch,
           //   children: [
           //     Text(msg.title.trim()),
-          //     Text(msg.detail),
+          //     Text(msg.details),
           //     Text(msg.imageUrl),
           //   ],
           // ),

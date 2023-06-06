@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class BlueshiftInbox extends StatefulWidget {
   final TextStyle? titleTextStyle;
-  final TextStyle? detailTextStyle;
+  final TextStyle? detailsTextStyle;
   final TextStyle? dateTextStyle;
   final Color unreadIndicatorColor;
   final Color dividerColor;
@@ -19,7 +19,7 @@ class BlueshiftInbox extends StatefulWidget {
   const BlueshiftInbox({
     Key? key,
     this.titleTextStyle,
-    this.detailTextStyle,
+    this.detailsTextStyle,
     this.dateTextStyle,
     this.unreadIndicatorColor = const Color(0xFF00C1C1),
     this.dividerColor = const Color(0xFF9A9A9A),
@@ -34,10 +34,10 @@ class BlueshiftInbox extends StatefulWidget {
 }
 
 class _BlueshiftInboxState extends State<BlueshiftInbox> {
-  late StreamSubscription<String> inboxEventStream;
+  late StreamSubscription<String> _inboxEventStream;
   List<BlueshiftInboxMessage> _inboxMessages = [];
   bool _isInAppLoading = false;
-  String? inappRegisteredScreenName;
+  String? _cachedInAppScreenName;
 
   void getInboxMessagesFromCache() {
     Blueshift.getInboxMessages().then((messages) {
@@ -45,27 +45,45 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
     });
   }
 
-  void handleInitState() {
-    if (Platform.isIOS) {
-      Blueshift.getRegisteredInAppScreenName().then((screenName) {
-        if (screenName != null && screenName != "") {
-          inappRegisteredScreenName = screenName;
-          Blueshift.unregisterForInAppMessage();
-        }
-      });
-    } else if (Platform.isAndroid) {
-      //TODO: Add logic for android
+  void handleIOSInAppRegistrationInit(String? screenName) {
+    if (screenName != null && screenName != "") {
+      _cachedInAppScreenName = screenName;
+      Blueshift.unregisterForInAppMessage();
     }
+  }
+
+  void handleIOSInAppRegistrationCleanup() {
+    if (_cachedInAppScreenName != null) {
+      Blueshift.registerForInAppMessage(_cachedInAppScreenName!);
+      _cachedInAppScreenName = null;
+    }
+  }
+
+  void handleAndroidInAppRegistrationInit(String? screenName) {
+    _cachedInAppScreenName = screenName;
+    Blueshift.registerForInAppMessage("blueshift_inbox");
+  }
+
+  Future<void> handleAndroidInAppRegistrationCleanup() async {
+    await Blueshift.unregisterForInAppMessage();
+    await Blueshift.registerForInAppMessage(_cachedInAppScreenName ?? "");
+  }
+
+  void handleInitState() {
+    Blueshift.getRegisteredInAppScreenName().then((screenName) {
+      if (Platform.isIOS) {
+        handleIOSInAppRegistrationInit(screenName);
+      } else if (Platform.isAndroid) {
+        handleAndroidInAppRegistrationInit(screenName);
+      }
+    });
   }
 
   void handleDispose() {
     if (Platform.isIOS) {
-      if (inappRegisteredScreenName != null) {
-        Blueshift.registerForInAppMessage(inappRegisteredScreenName!);
-        inappRegisteredScreenName = null;
-      }
+      handleIOSInAppRegistrationCleanup();
     } else if (Platform.isAndroid) {
-      //TODO: Add logic for android
+      handleAndroidInAppRegistrationCleanup();
     }
   }
 
@@ -124,17 +142,16 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
   void initState() {
     super.initState();
     handleInitState();
-    inboxEventStream = registerForInboxDataChangeEvents();
+    _inboxEventStream = registerForInboxDataChangeEvents();
     getInboxMessagesFromCache();
     getInboxMessagesFromApi();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _inboxEventStream.cancel();
     handleDispose();
-    // Remove the event listener
-    inboxEventStream.cancel();
+    super.dispose();
   }
 
   String formatDate(DateTime? dateTime) {
@@ -192,7 +209,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
-                      detailsTextStyle: widget.detailTextStyle ??
+                      detailsTextStyle: widget.detailsTextStyle ??
                           DefaultTextStyle.of(context)
                               .style
                               .copyWith(fontSize: 14, color: Colors.black),
