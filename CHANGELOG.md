@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Added support for Mobile Inbox feature.
+
 ## 1.0.1
 
 - Updated iOS SDK version to v2.3.1

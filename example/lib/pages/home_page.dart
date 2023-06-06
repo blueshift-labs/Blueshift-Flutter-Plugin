@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/routes.dart';
 import '../widgets/drawer.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -31,6 +33,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final _deviceIdController = TextEditingController();
 
   late StreamSubscription<String> deepLinkStream;
+  late StreamSubscription<String> inboxStream;
+
+  Future<int>? messageCount = Blueshift.getUnreadInboxMessageCount();
 
   @override
   void initState() {
@@ -39,7 +44,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     deepLinkStream = Blueshift.getInstance.onDeepLinkReceived.listen(
       (String event) {
+        print("deep link");
         navigateToDeepLinkPage(event);
+      },
+    );
+
+    inboxStream = Blueshift.getInstance.onInboxDataChanged.listen(
+      (String event) {
+        if (event == Blueshift.kInboxDataChangeEvent) {
+          setState(() {
+            messageCount = Blueshift.getUnreadInboxMessageCount();
+          });
+        }
       },
     );
     handleInitialURL();
@@ -49,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void deactivate() {
     super.deactivate();
     deepLinkStream.cancel();
+    inboxStream.cancel();
     _custIdController.dispose();
     _lastNameController.dispose();
     _deviceIdController.dispose();
@@ -81,6 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
     navigateToDeepLinkPage(url);
   }
 
+  void showInbox() {
+    Navigator.pushNamed(context, MyRoutes.inboxRoute);
+  }
+
+  void syncInbox() {
+    Blueshift.syncInboxMessages();
+  }
+
   navigateToDeepLinkPage(String url) {
     if (url.isNotEmpty) {
       Navigator.push(
@@ -104,7 +129,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text("Home Page")),
+        appBar: AppBar(title: const Text("Home Page"), actions: [
+          FutureBuilder<int>(
+            future: messageCount,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(); // Display nothing while loading
+              } else if (snapshot.hasError) {
+                return Text(
+                    'Error'); // Display error message if there is an error
+              } else {
+                final messageCount = snapshot.data;
+                return Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showInbox();
+                      },
+                      icon: Icon(Icons.message),
+                    ),
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          messageCount.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ]),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -262,11 +330,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Blueshift.removeUserInfo();
-                                    Navigator.pop(context);
                                   },
                                   style: style,
-                                  child:
-                                      const Text("Remove user data and Logout"),
+                                  child: const Text("Remove user data"),
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  style: style,
+                                  child: const Text("Logout"),
                                 ),
                               ),
                             ),
@@ -530,6 +608,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: style,
+                                  onPressed: () {
+                                    syncInbox();
+                                  },
+                                  child: const Text("Sync Inbox"),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -539,12 +629,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            hintText: "Current Device id",
-                            label: Text("Current Device Id"),
-                          ),
-                          controller: _deviceIdController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Device Id",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Card(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Current Device id",
+                                    label: Text("Current Device Id"),
+                                  ),
+                                  controller: _deviceIdController,
+                                ),
+                              ),
+                            ),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: style,
+                                  onPressed: () {
+                                    Blueshift.resetDeviceId();
+                                  },
+                                  child: const Text("Reset Device Id"),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),

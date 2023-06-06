@@ -19,6 +19,7 @@ public class BlueshiftFlutterRegistrar {
     private static final String APP_ICON = PREFIX + "APP_ICON";
     private static final String ENABLE_PUSH = PREFIX + "ENABLE_PUSH";
     private static final String ENABLE_IN_APP = PREFIX + "ENABLE_IN_APP";
+    private static final String ENABLE_INBOX = PREFIX + "ENABLE_INBOX";
     private static final String ENABLE_IN_APP_JS = PREFIX + "ENABLE_IN_APP_JS";
     private static final String IN_APP_INTERVAL = PREFIX + "IN_APP_INTERVAL";
     private static final String BATCH_INTERVAL = PREFIX + "BATCH_INTERVAL";
@@ -88,6 +89,9 @@ public class BlueshiftFlutterRegistrar {
 
                 boolean enableInAppJs = metaData.getBoolean(ENABLE_IN_APP_JS, false);
                 config.setJavaScriptForInAppWebViewEnabled(enableInAppJs);
+
+                boolean enableInbox = metaData.getBoolean(ENABLE_INBOX, false);
+                config.setInboxEnabled(enableInbox);
 
                 long inAppIntervalSeconds = metaData.getInt(IN_APP_INTERVAL, 0);
                 if (inAppIntervalSeconds > 0) config.setInAppInterval(inAppIntervalSeconds * 1000L);

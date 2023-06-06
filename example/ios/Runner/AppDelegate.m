@@ -19,14 +19,18 @@
     BlueShiftConfig *config = [[BlueShiftConfig alloc] init];
     config.apiKey = @"API_KEY";
     config.enableInAppNotification = YES;
-    
+
     // Delay push permission
     config.enablePushNotification = YES;
+
     config.debug = YES;
+
+    config.enableMobileInbox = YES;
     
     config.userNotificationDelegate = self;
     config.blueshiftUniversalLinksDelegate = self;
     config.applicationLaunchOptions = launchOptions;
+    config.blueshiftDeviceIdSource = BlueshiftDeviceIdSourceUUID;
     // If Automatic integration
     [BlueshiftPluginManager.sharedInstance initialisePluginWithConfig:config autoIntegrate:YES];
     

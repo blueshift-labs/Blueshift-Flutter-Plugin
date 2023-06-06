@@ -2,12 +2,18 @@
 
 #import "BlueshiftFlutterPlugin.h"
 #import "BlueShift.h"
+#import "BlueshiftInboxManager.h"
 #import "BlueshiftVersion.h"
 #import "BlueshiftNotificationConstants.h"
 #import "BlueshiftPluginManager.h"
+#import "InAppNotificationEntity.h"
+#import "BlueshiftConstants.h"
+#import "BlueshiftLog.h"
+#import "BlueshiftInboxNavigationViewController.h"
 
 @interface BlueshiftFlutterPlugin()
-    @property DeeplinkStreamHandler *deeplinkStreamHandler;
+    @property BlueshiftStreamHandler *deeplinkStreamHandler;
+    @property BlueshiftStreamHandler *inboxStreamHandler;
 @end
 
 @implementation BlueshiftFlutterPlugin
@@ -16,9 +22,16 @@
     BlueshiftFlutterPlugin* instance = [[BlueshiftFlutterPlugin alloc] init];
     
     FlutterMethodChannel* channel = [FlutterMethodChannel methodChannelWithName:kBlueshiftMethodChannel binaryMessenger:[registrar messenger]];
-    FlutterEventChannel *deepLinkEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftEventChannel binaryMessenger:[registrar messenger]];
-    instance.deeplinkStreamHandler = [DeeplinkStreamHandler new];
+    //setup deep link event
+    FlutterEventChannel *deepLinkEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftDeepLinkChannel binaryMessenger:[registrar messenger]];
+    instance.deeplinkStreamHandler = [BlueshiftStreamHandler new];
     [deepLinkEventChannel setStreamHandler:instance.deeplinkStreamHandler];
+    
+    //setup inbox event
+    FlutterEventChannel *inboxEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftInboxEventChannel binaryMessenger:[registrar messenger]];
+    instance.inboxStreamHandler = [BlueshiftStreamHandler new];
+    [inboxEventChannel setStreamHandler:instance.inboxStreamHandler];
+    
     [instance setupObservers];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
@@ -26,8 +39,16 @@
 - (void)setupObservers {
     [[NSNotificationCenter defaultCenter] addObserverForName:kBlueshiftDeepLinkEvent object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
         if (note.object) {
-            [self->_deeplinkStreamHandler sendDeepLink:note.object];
+            [self->_deeplinkStreamHandler sendData:note.object];
         }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kBSInboxUnreadMessageCountDidChange object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        [self->_inboxStreamHandler sendData:@"InboxDataChangeEvent"];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kBSInAppNotificationDidAppear object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        [self->_inboxStreamHandler sendData:@"InAppLoadEvent"];
     }];
 }
 
@@ -74,6 +95,9 @@
       [self setIDFA:call];
   } else if ([@"setCurrentLocation" isEqualToString:call.method]) {
      [self setCurrentLocation:call];
+  } else if ([@"getRegisteredInAppScreenName" isEqualToString:call.method]) {
+      [self getRegisteredInAppScreenName:result];
+      return;
   } else if ([@"getEnableInAppStatus" isEqualToString:call.method]) {
       [self getEnableInAppStatus:result];
       return;
@@ -113,6 +137,21 @@
       return;
   } else if ([@"liveContentByDeviceId" isEqualToString:call.method]) {
       [self getLiveContentByDeviceId:call callback:result];
+      return;
+  } else if ([@"getInboxMessages" isEqualToString:call.method]) {
+      [self getInboxMessages:result];
+      return;
+  } else if ([@"getUnreadInboxMessageCount" isEqualToString:call.method]) {
+      [self getUnreadInboxMessageCount:result];
+      return;
+  } else if ([@"syncInboxMessages" isEqualToString:call.method]) {
+      [self syncInboxMessages:result];
+      return;
+  } else if ([@"showInboxMessage" isEqualToString:call.method]) {
+      [self showInboxMessage:call];
+      return;
+  } else if ([@"deleteInboxMessage" isEqualToString:call.method]) {
+      [self deleteInboxMessage:call callback:result];
       return;
   } else {
     result(FlutterMethodNotImplemented);
@@ -179,6 +218,103 @@
 
 - (void)displayInAppNotification {
     [[BlueShift sharedInstance] displayInAppNotification];
+}
+
+#pragma mark Inbox
+-(void)syncInboxMessages:(FlutterResult)callback {
+    [BlueshiftInboxManager syncInboxMessages:^{
+        callback([NSNumber numberWithBool:YES]);
+    }];
+}
+
+-(void)getUnreadInboxMessageCount:(FlutterResult)callback {
+    [BlueshiftInboxManager getInboxUnreadMessagesCount:^(BOOL status, NSUInteger count) {
+        if (status) {
+            callback([NSNumber numberWithUnsignedInteger:count]);
+        } else {
+            callback([NSNumber numberWithUnsignedInteger:0]);
+        }
+    }];
+}
+
+-(void)getInboxMessages:(FlutterResult)callback {
+    [BlueshiftInboxManager getCachedInboxMessagesWithHandler:^(BOOL status, NSMutableArray<BlueshiftInboxMessage *> * _Nullable messages) {
+        if (status && messages.count > 0) {
+            NSMutableArray* convertedMessages = [[NSMutableArray alloc] init];
+            [messages enumerateObjectsUsingBlock:^(BlueshiftInboxMessage * _Nonnull msg, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (msg) {
+                    [convertedMessages addObject:[self convertMessageToDictionary:msg]];
+                }
+            }];
+            callback(@{@"messages": [convertedMessages copy]});
+        } else {
+            callback(@{@"messages":@[]});
+        }
+    }];
+}
+
+- (NSDictionary *)convertMessageToDictionary:(BlueshiftInboxMessage*)message {
+    NSMutableDictionary *messageDict = [NSMutableDictionary dictionary];
+    @try {
+        [messageDict setValue:message.messageUUID forKey:@"messageId"];
+        [messageDict setValue:message.messagePayload forKey:@"data"];
+        NSString* status = message.readStatus ? @"read" : @"unread";
+        [messageDict setValue:status forKey:@"status"];
+        double seconds = [message.createdAtDate timeIntervalSince1970];
+        NSNumber *timestamp = [NSNumber numberWithInteger: (NSInteger)seconds];
+        [messageDict setValue:timestamp forKey:@"createdAt"];
+        [messageDict setValue:message.title forKey:@"title"];
+        [messageDict setValue:message.detail forKey:@"details"];
+        [messageDict setValue:message.objectId.URIRepresentation.absoluteString forKey:@"objectId"];
+        NSString *imageUrl = [message.iconImageURL isEqualToString:@""]? nil : message.iconImageURL;
+        [messageDict setValue:imageUrl forKey:@"imageUrl"];
+    } @catch (NSException *exception) {
+        [BlueshiftLog logException:exception withDescription:nil methodName:nil];
+    }
+    return [messageDict copy];
+}
+
+- (BlueshiftInboxMessage*)convertDictionaryToMessage:(NSDictionary *)messageDict {
+    BlueshiftInboxMessage* message = [[BlueshiftInboxMessage alloc] init];
+    @try {
+        message.messageUUID = [messageDict valueForKey:@"messageId"];
+        NSDictionary* data = [messageDict valueForKey:@"data"];
+        message.messagePayload = [data copy];
+        message.inAppNotificationType = [[[data valueForKey:@"data"] valueForKey:@"inapp"] valueForKey:@"type"];
+        NSString* urlString = [messageDict valueForKey:@"objectId"];
+        if (urlString && ![urlString isEqualToString:@""]) {
+            NSURL* url = [NSURL URLWithString:urlString];
+            if (url) {
+                message.objectId = [BlueShift.sharedInstance.appDelegate.inboxMOContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+            }
+        }
+    } @catch (NSException *exception) {
+        [BlueshiftLog logException:exception withDescription:nil methodName:nil];
+    }
+    return message;
+}
+
+-(void)showInboxMessage:(FlutterMethodCall*)call {
+    NSDictionary *message = call.arguments[@"message"];
+
+    if ([message isKindOfClass:[NSDictionary class]]) {
+        [BlueshiftInboxManager showNotificationForInboxMessage:[self convertDictionaryToMessage:message] inboxInAppDelegate:nil];
+    }
+}
+
+-(void)deleteInboxMessage:(FlutterMethodCall*)call callback:(FlutterResult)callback {
+    NSDictionary *message = call.arguments[@"message"];
+
+    if ([message isKindOfClass:[NSDictionary class]]) {
+        [BlueshiftInboxManager deleteInboxMessage:[self convertDictionaryToMessage:message] completionHandler:^(BOOL status, NSString * _Nullable errMsg) {
+            if (status) {
+                callback([NSNumber numberWithBool:YES]);
+            } else {
+                FlutterError *error = [FlutterError errorWithCode:@"error" message:errMsg details:nil];
+                callback(error);
+            }
+        }];
+    }
 }
 
 #pragma mark Setters
@@ -268,6 +404,13 @@
 }
 
 #pragma mark Getters
+- (void)getRegisteredInAppScreenName:(FlutterResult)callback {
+    if (callback) {
+        NSString* screenName = [BlueShift.sharedInstance getRegisteredForInAppScreenName];
+        callback(screenName);
+    }
+}
+
 - (void)getEnableInAppStatus:(FlutterResult)callback {
     if (callback) {
         BOOL isEnabled = [BlueShiftAppData currentAppData].enableInApp;
@@ -414,16 +557,16 @@
 
 @end
 
-@implementation DeeplinkStreamHandler {
+@implementation BlueshiftStreamHandler {
     FlutterEventSink _Nullable _eventSink;
-    NSString  * _Nullable _deepLink;
+    NSString  * _Nullable _event;
 }
 
-- (void)sendDeepLink:(NSString *)url {
+-(void)sendData:(NSString *)event {
     if (_eventSink == nil) {
-        _deepLink = url;
+        _event = event;
     } else {
-        _eventSink(url);
+        _eventSink(event);
     }
 }
 
@@ -434,9 +577,9 @@
 
 - (FlutterError * _Nullable)onListenWithArguments:(id _Nullable)arguments eventSink:(nonnull FlutterEventSink)events {
     _eventSink = events;
-    if (_deepLink) {
-        [self sendDeepLink:_deepLink];
-        _deepLink = nil;
+    if (_event) {
+        [self sendData:_event];
+        _event = nil;
     }
     return nil;
 }

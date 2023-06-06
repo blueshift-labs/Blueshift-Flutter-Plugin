@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:blueshift_flutter_plugin_example/pages/inbox_page.dart';
 import 'package:blueshift_plugin/blueshift_plugin.dart';
 import 'package:blueshift_flutter_plugin_example/pages/deeplink_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         "/": (context) => const LoginPage(),
         MyRoutes.loginRoute: (context) => const LoginPage(),
         MyRoutes.homeRoute: (context) => const MyHomePage(),
+        MyRoutes.inboxRoute: (context) => InboxPage(),
         MyRoutes.deeplinkRoute: (context) => DeeplinkPage(
               deeplink: '',
             ),
