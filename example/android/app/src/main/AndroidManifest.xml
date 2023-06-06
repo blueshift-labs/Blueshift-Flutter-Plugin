@@ -63,14 +63,25 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <!--Enable Logging (DO NOT enable this in production app)-->
+        <meta-data
+            android:name="com.blueshift.config.LOG_LEVEL"
+            android:value="V" />
+
+        <!--Mandatory Configuration-->
         <meta-data
             android:name="com.blueshift.config.API_KEY"
             android:value="BLUESHIFT_EVENT_API_KEY" />
+
+        <!--Recommended Configurations-->
         <meta-data
             android:name="com.blueshift.config.REGION"
             android:value="US" />
         <meta-data
             android:name="com.blueshift.config.ENABLE_PUSH"
+            android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.ENABLE_PUSH_APP_LINKS"
             android:value="true" />
         <meta-data
             android:name="com.blueshift.config.ENABLE_IN_APP"
@@ -82,64 +93,60 @@
             android:name="com.blueshift.config.ENABLE_INBOX"
             android:value="true" />
         <meta-data
-            android:name="com.blueshift.config.IN_APP_INTERVAL"
-            android:value="300" />
-        <meta-data
-            android:name="com.blueshift.config.BATCH_INTERVAL"
-            android:value="54000" />
-        <meta-data
-            android:name="com.blueshift.config.APP_ICON"
-            android:resource="@mipmap/ic_launcher" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_ICON_SMALL"
-            android:resource="@mipmap/ic_launcher" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_ICON_BIG"
-            android:resource="@mipmap/ic_launcher" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_ICON_COLOR"
-            android:resource="@color/notificationColor" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_ID"
-            android:value="DefaultChannelId" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_NAME"
-            android:value="DefaultChannelName" />
-        <meta-data
-            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_DESCRIPTION"
-            android:value="DefaultChannelDescription" />
-        <meta-data
-            android:name="com.blueshift.config.ENABLE_PUSH_APP_LINKS"
-            android:value="true" />
-        <meta-data
-            android:name="com.blueshift.config.ENABLE_IN_APP_MANUAL_TRIGGER"
-            android:value="true" />
-        <meta-data
-            android:name="com.blueshift.config.ENABLE_IN_APP_BACKGROUND_FETCH"
-            android:value="true" />
-        <meta-data
-            android:name="com.blueshift.config.ENABLE_AUTO_APP_OPEN"
-            android:value="true" />
-        <meta-data
-            android:name="com.blueshift.config.AUTO_APP_OPEN_INTERVAL"
-            android:value="54000" />
-        <meta-data
-            android:name="com.blueshift.config.JOB_ID_BULK_EVENT"
-            android:value="911" />
-        <meta-data
-            android:name="com.blueshift.config.JOB_ID_NETWORK_CHANGE"
-            android:value="911" />
-        <meta-data
-            android:name="com.blueshift.config.DEVICE_ID_SOURCE"
-            android:value="INSTANCE_ID" />
-        <meta-data
-            android:name="com.blueshift.config.CUSTOM_DEVICE_ID"
-            android:value="YOUR_CUSTOM_DEVICE_ID" />
-        <meta-data
-            android:name="com.blueshift.config.LOG_LEVEL"
-            android:value="V" />
-        <meta-data
             android:name="com.blueshift.config.IN_APP_ON_ALL_SCREENS"
             android:value="true" />
+        <meta-data
+            android:name="com.blueshift.config.DEVICE_ID_SOURCE"
+            android:value="GUID" />
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.CUSTOM_DEVICE_ID"-->
+<!--            android:value="YOUR_CUSTOM_DEVICE_ID" />-->
+
+        <!--Optional/Advanced Configurations-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.IN_APP_INTERVAL"-->
+<!--            android:value="300" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.BATCH_INTERVAL"-->
+<!--            android:value="54000" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.APP_ICON"-->
+<!--            android:resource="@mipmap/ic_launcher" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_ICON_SMALL"-->
+<!--            android:resource="@mipmap/ic_launcher" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_ICON_BIG"-->
+<!--            android:resource="@mipmap/ic_launcher" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_ICON_COLOR"-->
+<!--            android:resource="@color/notificationColor" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_ID"-->
+<!--            android:value="DefaultChannelId" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_NAME"-->
+<!--            android:value="DefaultChannelName" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.NOTIFICATION_CHANNEL_DESCRIPTION"-->
+<!--            android:value="DefaultChannelDescription" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.ENABLE_IN_APP_MANUAL_TRIGGER"-->
+<!--            android:value="true" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.ENABLE_IN_APP_BACKGROUND_FETCH"-->
+<!--            android:value="true" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.ENABLE_AUTO_APP_OPEN"-->
+<!--            android:value="true" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.AUTO_APP_OPEN_INTERVAL"-->
+<!--            android:value="54000" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.JOB_ID_BULK_EVENT"-->
+<!--            android:value="911" />-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.JOB_ID_NETWORK_CHANGE"-->
+<!--            android:value="911" />-->
     </application>
 </manifest>
