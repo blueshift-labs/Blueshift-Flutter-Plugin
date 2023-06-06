@@ -7,7 +7,7 @@ issue_tracker: https://github.com/blueshift-labs/Blueshift-Flutter-Plugin/issues
 documentation: https://developer.blueshift.com/docs/install-and-set-up-flutter-plugin
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=2.16.2 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:

@@ -66,6 +66,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
 
   Future<void> handleAndroidInAppRegistrationCleanup() async {
     await Blueshift.unregisterForInAppMessage();
+
     /// If _cachedInAppScreenName is null, the host app may not have
     /// registered any screen for in-app display. Having this check
     /// will prevent doing an unintentional call to registerForInAppMessage().
@@ -189,9 +190,10 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               // Handle the dismiss event here
-              Blueshift.deleteInboxMessage(inboxMessage).then((value) {
-                setState(() => _inboxMessages.removeAt(index));
-              }).onError((error, stackTrace) {
+              setState(() => _inboxMessages.removeAt(index));
+              Blueshift.deleteInboxMessage(inboxMessage)
+                  .then((value) {})
+                  .onError((error, stackTrace) {
                 getInboxMessagesFromCache();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(error.toString())),
@@ -302,14 +304,20 @@ class DefaultInboxListItem extends StatelessWidget {
                     style: titleTextStyle,
                   ),
                 if (details.isNotEmpty)
-                  Text(
-                    details.trim(),
-                    style: detailsTextStyle,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      details.trim(),
+                      style: detailsTextStyle,
+                    ),
                   ),
                 if (dateString.isNotEmpty)
-                  Text(
-                    dateString.trim(),
-                    style: dateTextStyle,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      dateString.trim(),
+                      style: dateTextStyle,
+                    ),
                   ),
               ],
             ),
