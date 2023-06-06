@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class BlueshiftInbox extends StatefulWidget {
   final TextStyle? titleTextStyle;
-  final TextStyle? detailTextStyle;
+  final TextStyle? detailsTextStyle;
   final TextStyle? dateTextStyle;
   final Color unreadIndicatorColor;
   final Color dividerColor;
@@ -19,7 +19,7 @@ class BlueshiftInbox extends StatefulWidget {
   const BlueshiftInbox({
     Key? key,
     this.titleTextStyle,
-    this.detailTextStyle,
+    this.detailsTextStyle,
     this.dateTextStyle,
     this.unreadIndicatorColor = const Color(0xFF00C1C1),
     this.dividerColor = const Color(0xFF9A9A9A),
@@ -209,7 +209,7 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
-                      detailsTextStyle: widget.detailTextStyle ??
+                      detailsTextStyle: widget.detailsTextStyle ??
                           DefaultTextStyle.of(context)
                               .style
                               .copyWith(fontSize: 14, color: Colors.black),
