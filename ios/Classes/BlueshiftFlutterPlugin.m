@@ -8,11 +8,12 @@
 #import "BlueshiftPluginManager.h"
 #import "InAppNotificationEntity.h"
 #import "BlueshiftConstants.h"
+#import "BlueshiftLog.h"
 #import "BlueshiftInboxNavigationViewController.h"
 
 @interface BlueshiftFlutterPlugin()
     @property BlueshiftStreamHandler *deeplinkStreamHandler;
-    @property BlueshiftStreamHandler *inboxEventStreamHandler;
+    @property BlueshiftStreamHandler *inboxStreamHandler;
 @end
 
 @implementation BlueshiftFlutterPlugin
@@ -22,14 +23,14 @@
     
     FlutterMethodChannel* channel = [FlutterMethodChannel methodChannelWithName:kBlueshiftMethodChannel binaryMessenger:[registrar messenger]];
     //setup deep link event
-    FlutterEventChannel *deepLinkEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftEventChannel binaryMessenger:[registrar messenger]];
+    FlutterEventChannel *deepLinkEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftDeepLinkChannel binaryMessenger:[registrar messenger]];
     instance.deeplinkStreamHandler = [BlueshiftStreamHandler new];
     [deepLinkEventChannel setStreamHandler:instance.deeplinkStreamHandler];
     
     //setup inbox event
     FlutterEventChannel *inboxEventChannel = [FlutterEventChannel eventChannelWithName:kBlueshiftInboxEventChannel binaryMessenger:[registrar messenger]];
-    instance.inboxEventStreamHandler = [BlueshiftStreamHandler new];
-    [inboxEventChannel setStreamHandler:instance.inboxEventStreamHandler];
+    instance.inboxStreamHandler = [BlueshiftStreamHandler new];
+    [inboxEventChannel setStreamHandler:instance.inboxStreamHandler];
     
     [instance setupObservers];
     [registrar addMethodCallDelegate:instance channel:channel];
@@ -43,11 +44,11 @@
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kBSInboxUnreadMessageCountDidChange object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        [self->_inboxEventStreamHandler sendData:@"InboxDataChangeEvent"];
+        [self->_inboxStreamHandler sendData:@"InboxDataChangeEvent"];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:kBSInAppNotificationDidAppear object:nil queue: [NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        [self->_inboxEventStreamHandler sendData:@"InAppLoadEvent"];
+        [self->_inboxStreamHandler sendData:@"InAppLoadEvent"];
     }];
 }
 
@@ -241,7 +242,9 @@
         if (status && messages.count > 0) {
             NSMutableArray* convertedMessages = [[NSMutableArray alloc] init];
             [messages enumerateObjectsUsingBlock:^(BlueshiftInboxMessage * _Nonnull msg, NSUInteger idx, BOOL * _Nonnull stop) {
-                [convertedMessages addObject:[self convertMessageToDictionary:msg]];
+                if (msg) {
+                    [convertedMessages addObject:[self convertMessageToDictionary:msg]];
+                }
             }];
             callback(@{@"messages": [convertedMessages copy]});
         } else {
@@ -252,33 +255,41 @@
 
 - (NSDictionary *)convertMessageToDictionary:(BlueshiftInboxMessage*)message {
     NSMutableDictionary *messageDict = [NSMutableDictionary dictionary];
-    [messageDict setValue:message.messageUUID forKey:@"messageId"];
-    [messageDict setValue:message.messagePayload forKey:@"data"];
-    NSString* status = message.readStatus ? @"read" : @"unread";
-    [messageDict setValue:status forKey:@"status"];
-    double seconds = [message.createdAtDate timeIntervalSince1970];
-    NSNumber *timestamp = [NSNumber numberWithInteger: (NSInteger)seconds];
-    [messageDict setValue:timestamp forKey:@"createdAt"];
-    [messageDict setValue:message.title forKey:@"title"];
-    [messageDict setValue:message.detail forKey:@"details"];
-    [messageDict setValue:message.objectId.URIRepresentation.absoluteString forKey:@"objectId"];
-    NSString *imageUrl = [message.iconImageURL isEqualToString:@""]? nil : message.iconImageURL;
-    [messageDict setValue:imageUrl forKey:@"imageUrl"];
+    @try {
+        [messageDict setValue:message.messageUUID forKey:@"messageId"];
+        [messageDict setValue:message.messagePayload forKey:@"data"];
+        NSString* status = message.readStatus ? @"read" : @"unread";
+        [messageDict setValue:status forKey:@"status"];
+        double seconds = [message.createdAtDate timeIntervalSince1970];
+        NSNumber *timestamp = [NSNumber numberWithInteger: (NSInteger)seconds];
+        [messageDict setValue:timestamp forKey:@"createdAt"];
+        [messageDict setValue:message.title forKey:@"title"];
+        [messageDict setValue:message.detail forKey:@"details"];
+        [messageDict setValue:message.objectId.URIRepresentation.absoluteString forKey:@"objectId"];
+        NSString *imageUrl = [message.iconImageURL isEqualToString:@""]? nil : message.iconImageURL;
+        [messageDict setValue:imageUrl forKey:@"imageUrl"];
+    } @catch (NSException *exception) {
+        [BlueshiftLog logException:exception withDescription:nil methodName:nil];
+    }
     return [messageDict copy];
 }
 
 - (BlueshiftInboxMessage*)convertDictionaryToMessage:(NSDictionary *)messageDict {
     BlueshiftInboxMessage* message = [[BlueshiftInboxMessage alloc] init];
-    message.messageUUID = [messageDict valueForKey:@"messageId"];
-    NSDictionary* data = [messageDict valueForKey:@"data"];
-    message.messagePayload = [data copy];
-    message.inAppNotificationType = [[[data valueForKey:@"data"] valueForKey:@"inapp"] valueForKey:@"type"];
-    NSString* urlString = [messageDict valueForKey:@"objectId"];
-    if (urlString && ![urlString isEqualToString:@""]) {
-        NSURL* url = [NSURL URLWithString:urlString];
-        if (url) {
-            message.objectId = [BlueShift.sharedInstance.appDelegate.inboxMOContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+    @try {
+        message.messageUUID = [messageDict valueForKey:@"messageId"];
+        NSDictionary* data = [messageDict valueForKey:@"data"];
+        message.messagePayload = [data copy];
+        message.inAppNotificationType = [[[data valueForKey:@"data"] valueForKey:@"inapp"] valueForKey:@"type"];
+        NSString* urlString = [messageDict valueForKey:@"objectId"];
+        if (urlString && ![urlString isEqualToString:@""]) {
+            NSURL* url = [NSURL URLWithString:urlString];
+            if (url) {
+                message.objectId = [BlueShift.sharedInstance.appDelegate.inboxMOContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:url];
+            }
         }
+    } @catch (NSException *exception) {
+        [BlueshiftLog logException:exception withDescription:nil methodName:nil];
     }
     return message;
 }
