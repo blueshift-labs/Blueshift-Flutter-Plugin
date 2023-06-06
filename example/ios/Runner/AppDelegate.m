@@ -19,10 +19,12 @@
     BlueShiftConfig *config = [[BlueShiftConfig alloc] init];
     config.apiKey = @"API_KEY";
     config.enableInAppNotification = YES;
-    config.enableMobileInbox = YES;
+
     // Delay push permission
     config.enablePushNotification = YES;
+
     config.debug = YES;
+
     config.enableMobileInbox = YES;
     
     config.userNotificationDelegate = self;
