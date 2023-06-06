@@ -79,6 +79,9 @@
             android:name="com.blueshift.config.ENABLE_IN_APP_JS"
             android:value="true" />
         <meta-data
+            android:name="com.blueshift.config.ENABLE_INBOX"
+            android:value="true" />
+        <meta-data
             android:name="com.blueshift.config.IN_APP_INTERVAL"
             android:value="300" />
         <meta-data
