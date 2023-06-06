@@ -66,7 +66,12 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
 
   Future<void> handleAndroidInAppRegistrationCleanup() async {
     await Blueshift.unregisterForInAppMessage();
-    await Blueshift.registerForInAppMessage(_cachedInAppScreenName ?? "");
+    /// If _cachedInAppScreenName is null, the host app may not have
+    /// registered any screen for in-app display. Having this check
+    /// will prevent doing an unintentional call to registerForInAppMessage().
+    if (_cachedInAppScreenName != null) {
+      await Blueshift.registerForInAppMessage(_cachedInAppScreenName!);
+    }
   }
 
   void handleInitState() {
