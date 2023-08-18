@@ -15,6 +15,8 @@ class BlueshiftInbox extends StatefulWidget {
   final Widget? loadingIndicator;
   final Widget Function(BlueshiftInboxMessage)? inboxItem;
   final String Function(DateTime)? dateFormatter;
+  final int Function(BlueshiftInboxMessage, BlueshiftInboxMessage)?
+      sortMessages;
 
   const BlueshiftInbox({
     Key? key,
@@ -27,6 +29,7 @@ class BlueshiftInbox extends StatefulWidget {
     this.loadingIndicator = const CircularProgressIndicator(),
     this.inboxItem,
     this.dateFormatter,
+    this.sortMessages,
   }) : super(key: key);
 
   @override
@@ -41,6 +44,16 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
 
   void getInboxMessagesFromCache() {
     Blueshift.getInboxMessages().then((messages) {
+      messages.sort(
+        (a, b) {
+          if (widget.sortMessages != null) {
+            return widget.sortMessages!(a,b);
+          } else {
+            return b.createdAt.compareTo(a.createdAt);
+          }
+        },
+      );
+
       setState(() => _inboxMessages = messages);
     });
   }
