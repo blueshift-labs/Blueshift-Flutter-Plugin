@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <BlueShift_iOS_SDK/BlueShift.h>
 #import <UserNotifications/UserNotifications.h>
-#import <BlueShift_iOS_SDK/BlueshiftUniversalLinksDelegate.h>
 
 #ifndef BlueshiftPluginManager_h
 #define BlueshiftPluginManager_h
 
 #define kBlueshiftDeepLinkEvent                 @"BlueshiftDeepLinkEvent"
+#define kBlueshiftPushNotificationClickedEvent  @"BlueshiftPushNotificationClickedEvent"
 
 @interface BlueshiftPluginManager : NSObject
 
@@ -33,6 +33,13 @@
 /// @param url deep link url
 - (void)sendDeepLinkToFlutter:(NSURL* _Nonnull)url;
 
+/// Send push notification payload to dart
+/// This method can be used for sending the push notification payload to dart when user clicks on the push notification.
+/// With automatic inetgration, SDK takes care of sending the push notification payload to the dart automatically.
+/// @param userInfo deep link url
+- (void)sendPushNotificationPayloadToFlutter:(NSDictionary*_Nonnull)userInfo;
+
+
 /// Check if URL received inside the AppDelegate's OpenURL method is from Blueshift or not.
 /// @param url URL from the AppDelegate's OpenURL method
 /// @param options options from the AppDelegate's OpenURL method
@@ -41,12 +48,6 @@
 /// Checks if the URL is from Blueshift or not.
 /// @param url URL from the AppDelegate's OpenURL method.
 - (BOOL)isBlueshiftUniversalLinkURL:(NSURL*_Nullable)url;
-
-@end
-
-@interface NSObject (BlueshiftFlutterAutoIntegration)
-
-+ (void)swizzleMainAppDelegate;
 
 @end
 

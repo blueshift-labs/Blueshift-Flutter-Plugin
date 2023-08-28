@@ -48,6 +48,11 @@ Future<void> initialiseFirebase() async {
     _handleRemoteMessage(message);
   });
 
+  Blueshift.getInstance.oniOSPushNotificationClick.listen((Object payload) {
+    print("Blueshift iOS Push Notification recieved on the Flutter");
+    print(payload);
+  });
+
   //iOS config - Show push notification when app is running in foreground
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification

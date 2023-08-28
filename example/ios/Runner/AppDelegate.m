@@ -35,7 +35,7 @@
     [BlueshiftPluginManager.sharedInstance initialisePluginWithConfig:config autoIntegrate:YES];
     
     // If Manual integration
-    //[BlueshiftPluginManager.sharedInstance initialisePluginWithConfig:config autoIntegrate:YES];
+//    [BlueshiftPluginManager.sharedInstance initialisePluginWithConfig:config autoIntegrate:NO];
     
     // In App registration for all screens
     //[[BlueShift sharedInstance] registerForInAppMessage:@"Flutter"];
@@ -85,6 +85,8 @@
 //    NSDictionary* userInfo = response.notification.request.content.userInfo;
 //
 //    if([[BlueShift sharedInstance]isBlueshiftPushNotification:userInfo]) {
+//        //Send Blueshift Push notification payload to flutter
+//        [[BlueshiftPluginManager sharedInstance] sendPushNotificationPayloadToFlutter:response.notification.request.content.userInfo];
 //        // Call Blueshift method to handle the push notification click
 //        [[BlueShift sharedInstance].userNotificationDelegate handleUserNotification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 //    } else {

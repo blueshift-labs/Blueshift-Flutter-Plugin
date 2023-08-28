@@ -9,10 +9,15 @@ class Blueshift {
 
   final StreamController<String> _inboxStreamController =
       StreamController<String>.broadcast();
+  final StreamController<Object> _pushNotificationStreamController =
+      StreamController<Object>.broadcast();
+
   static const MethodChannel _methodChannel =
       MethodChannel('blueshift/methods');
   static const EventChannel _eventChannel =
       EventChannel('blueshift/deeplink_event');
+  static const EventChannel _pushClickEventChannel =
+      EventChannel('blueshift/push_click_event');
   static const EventChannel _inboxEventChannel =
       EventChannel('blueshift/inbox_event');
 
@@ -25,6 +30,11 @@ class Blueshift {
         .receiveBroadcastStream()
         .cast<String>()
         .listen((event) => _inboxStreamController.sink.add(event));
+
+    _pushClickEventChannel
+        .receiveBroadcastStream()
+        .cast<Object>()
+        .listen((data) => _pushNotificationStreamController.sink.add(data));
   }
 
   /// Get the [Stream] of deep link URLs from push, in-app, and email.
@@ -36,6 +46,18 @@ class Blueshift {
   /// ```
   Stream<String> get onDeepLinkReceived {
     return _eventChannel.receiveBroadcastStream().cast<String>();
+  }
+
+  /// Get the [Stream] of Push notification payload data when push notification is clicked. An event is fired to this stream when
+  /// user clicks on the push notification.
+  ///
+  /// ```dart
+  /// Blueshift.getInstance.oniOSPushNotificationClick.listen((Object payload) {
+  ///   Reload the inbox screen
+  /// });
+  /// ```
+  Stream<Object> get oniOSPushNotificationClick {
+    return _pushNotificationStreamController.stream.cast<Object>();
   }
 
   /// Get the [Stream] of Inbox data change events. An event is fired to this stream when

@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Added support to send iOS push notification payload to flutter app on push notification click event.
+
 ## 1.1.0
 
 - Added support for Mobile Inbox feature.
