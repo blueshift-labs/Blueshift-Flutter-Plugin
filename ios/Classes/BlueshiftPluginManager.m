@@ -32,9 +32,12 @@ static BlueshiftPluginManager *_sharedInstance = nil;
         Class appDelegateClass = [[UIApplication sharedApplication].delegate class];
         [appDelegateClass swizzleMainAppDelegate];
     }
-    //Send push payload to flutter
+    //If Blueshift push payload, then send push payload to flutter
     if (config.applicationLaunchOptions) {
-        [self sendPushNotificationPayloadToFlutter:config.applicationLaunchOptions];
+        NSDictionary *userInfo = [config.applicationLaunchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (userInfo && [[BlueShift sharedInstance] isBlueshiftPushNotification:config.applicationLaunchOptions]) {
+            [self sendPushNotificationPayloadToFlutter:config.applicationLaunchOptions];
+        }
     }
     [BlueShift initWithConfiguration:config];
 }
@@ -53,17 +56,11 @@ static BlueshiftPluginManager *_sharedInstance = nil;
 }
 
 - (BOOL)isBlueshiftOpenURLLink:(NSURL*)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    if (url && options && [options[openURLOptionsSource] isEqual:openURLOptionsBlueshift]) {
-        return YES;
-    }
-    return NO;
+    return [[BlueShift sharedInstance] isBlueshiftOpenURLData:url additionalData:options];
 }
 
 - (BOOL)isBlueshiftUniversalLinkURL:(NSURL*)url {
-    if (url && ([BlueShift.sharedInstance isBlueshiftUniversalLinkURL:url] || [url.absoluteString rangeOfString:kUniversalLinkShortURLKey].location != NSNotFound)) {
-        return YES;
-    }
-    return NO;
+    return [[BlueShift sharedInstance] isBlueshiftUniversalLinkURL:url];
 }
 
 @end

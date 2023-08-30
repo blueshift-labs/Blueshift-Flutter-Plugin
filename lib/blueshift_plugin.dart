@@ -48,12 +48,12 @@ class Blueshift {
     return _eventChannel.receiveBroadcastStream().cast<String>();
   }
 
-  /// Get the [Stream] of Push notification payload data when push notification is clicked. An event is fired to this stream when
+  /// Get the [Stream] of Push notification payload data when push notification on iOS is clicked. An event is fired only for iOS to this stream when
   /// user clicks on the push notification.
   ///
   /// ```dart
   /// Blueshift.getInstance.oniOSPushNotificationClick.listen((Object payload) {
-  ///   Reload the inbox screen
+  ///   //process the received payload
   /// });
   /// ```
   Stream<Object> get oniOSPushNotificationClick {
