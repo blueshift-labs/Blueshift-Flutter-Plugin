@@ -44,15 +44,13 @@ class _BlueshiftInboxState extends State<BlueshiftInbox> {
 
   void getInboxMessagesFromCache() {
     Blueshift.getInboxMessages().then((messages) {
-      messages.sort(
-        (a, b) {
-          if (widget.sortMessages != null) {
-            return widget.sortMessages!(a,b);
-          } else {
-            return b.createdAt.compareTo(a.createdAt);
-          }
-        },
-      );
+      if (widget.sortMessages != null) {
+        messages.sort((a, b) => widget.sortMessages!(a,b),);
+      } else {
+        if (Platform.isAndroid) {
+          messages.sort((a, b) => b.createdAt.compareTo(a.createdAt),);
+        }
+      }
 
       setState(() => _inboxMessages = messages);
     });
