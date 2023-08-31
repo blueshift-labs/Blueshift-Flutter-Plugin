@@ -1,6 +1,7 @@
 ## 1.1.1
 
 - Added support to send iOS push notification payload to flutter app on push notification click event.
+- Added support to change the default sorting order of Mobile Inbox messages. 
 
 ## 1.1.0
 
