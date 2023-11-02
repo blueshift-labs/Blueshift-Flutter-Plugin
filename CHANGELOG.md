@@ -1,3 +1,8 @@
+## 1.1.2
+
+- Updated Android SDK version to v3.4.3
+- Updated iOS SDK version to v2.4.2
+
 ## 1.1.1
 
 - Added support to send iOS push notification payload to flutter app on push notification click event.
