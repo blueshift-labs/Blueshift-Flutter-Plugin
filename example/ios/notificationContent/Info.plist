@@ -2,24 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSExtension</key>
-    <dict>
-        <key>NSExtensionAttributes</key>
+	<key>NSExtension</key>
+	<dict>
+        <key>NSExtension</key>
         <dict>
-            <key>UNNotificationExtensionCategory</key>
-            <array>
-                <string>carousel_animation</string>
-                <string>carousel</string>
-            </array>
-            <key>UNNotificationExtensionDefaultContentHidden</key>
-            <false/>
-            <key>UNNotificationExtensionInitialContentSizeRatio</key>
-            <real>1</real>
+            <key>NSExtensionAttributes</key>
+            <dict>
+                <key>UNNotificationExtensionCategory</key>
+                <array>
+                    <string>carousel_animation</string>
+                    <string>carousel</string>
+                </array>
+                <key>UNNotificationExtensionDefaultContentHidden</key>
+                <false/>
+                <key>UNNotificationExtensionInitialContentSizeRatio</key>
+                <real>1</real>
+            </dict>
+            <key>NSExtensionMainStoryboard</key>
+            <string>MainInterface</string>
+            <key>NSExtensionPointIdentifier</key>
+            <string>com.apple.usernotifications.content-extension</string>
         </dict>
         <key>NSExtensionMainStoryboard</key>
-        <string>MainInterface</string>
-        <key>NSExtensionPointIdentifier</key>
-        <string>com.apple.usernotifications.content-extension</string>
-    </dict>
+		<string>MainInterface</string>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.usernotifications.content-extension</string>
+	</dict>
 </dict>
 </plist>

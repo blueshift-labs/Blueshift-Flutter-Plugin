@@ -19,10 +19,19 @@ class InboxPage extends StatelessWidget {
           ),
         ),
         body: BlueshiftInbox(
-          // titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-          // detailsTextStyle: Theme.of(context).textTheme.bodyMedium,
-          // dateTextStyle: Theme.of(context).textTheme.bodySmall,
-          // unreadIndicatorColor: Colors.red,
+          titleTextStyle: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(color: Colors.green),
+          detailsTextStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: Colors.red),
+          dateTextStyle: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: Colors.blue),
+          unreadIndicatorColor: Colors.cyan,
           // dividerColor: Colors.blueGrey,
           // dateFormatter: (date) => date.toIso8601String(),
           // sortMessages: (m1, m2) => m2.createdAt.compareTo(m1.createdAt),
