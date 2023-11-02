@@ -26,7 +26,11 @@ Future<void> main() async {
 Future<void> initialiseFirebase() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    name: 'project-62519831960',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   // https://github.com/firebase/flutterfire/issues/6011
   await FirebaseMessaging.instance.getToken();
   // listen for notification while the app is in background or terminated.

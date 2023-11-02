@@ -80,9 +80,13 @@
         <meta-data
             android:name="com.blueshift.config.ENABLE_PUSH"
             android:value="true" />
-        <meta-data
-            android:name="com.blueshift.config.ENABLE_PUSH_APP_LINKS"
-            android:value="true" />
+<!--        Blueshift's Android SDK now lets you choose how the deep link URL should be treated for push and in-app.-->
+<!--        With the help of bsft_tgt query param, now you can take the user to external apps/browsers directly.-->
+<!--        The following config can break this behavior, so we recommend setting the following config to false or-->
+<!--        skip this config during integration (default is false). To know more, email us at support@blueshift.com-->
+<!--        <meta-data-->
+<!--            android:name="com.blueshift.config.ENABLE_PUSH_APP_LINKS"-->
+<!--            android:value="true" />-->
         <meta-data
             android:name="com.blueshift.config.ENABLE_IN_APP"
             android:value="true" />
