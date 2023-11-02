@@ -1,3 +1,8 @@
+## 1.1.2
+
+- Updated Android SDK version to [3.4.3](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v3.4.3).
+- Updated iOS SDK version to [2.4.2](https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases/tag/2.4.2).
+
 ## 1.1.1
 
 - Added support to send iOS push notification payload to flutter app on push notification click event.
