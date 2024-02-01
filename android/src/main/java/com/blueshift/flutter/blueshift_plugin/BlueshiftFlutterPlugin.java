@@ -55,6 +55,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
     private Context appContext;
     private EventChannel deeplinkEventChannel;
     private EventChannel mobileInboxEventChannel;
+    private EventChannel pushEventsChannel;
     private MethodChannel methodChannel;
     private ActivityPluginBinding activityPluginBinding;
     private EventChannel.EventSink deeplinkEventSink = null;
@@ -78,6 +79,7 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
         deeplinkEventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/deeplink_event");
         mobileInboxEventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/inbox_event");
+        pushEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/push_click_event");
         methodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "blueshift/methods");
 
         deeplinkEventChannel.setStreamHandler(new EventChannel.StreamHandler() {
@@ -101,6 +103,16 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
             @Override
             public void onCancel(Object arguments) {
                 inboxEventSink = null;
+            }
+        }); // EventChannel.StreamHandler
+
+        pushEventsChannel.setStreamHandler(new EventChannel.StreamHandler() {
+            @Override
+            public void onListen(Object arguments, EventChannel.EventSink events) {
+            }
+
+            @Override
+            public void onCancel(Object arguments) {
             }
         }); // EventChannel.StreamHandler
 
