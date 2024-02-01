@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'blueshift_plugin'
-  s.version          = '1.1.2'
+  s.version          = '1.1.3'
   s.summary          = 'Blueshift Flutter Plugin'
   s.description      = "Flutter plugin for the Blueshift Android and iOS SDK"
   s.homepage         = 'https://developer.blueshift.com/docs'
