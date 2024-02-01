@@ -53,6 +53,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'com.blueshift.flutter.blueshift_flutter_plugin_example'
 }
 
 flutter {
