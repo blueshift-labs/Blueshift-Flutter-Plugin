@@ -49,7 +49,7 @@ import io.flutter.plugin.common.PluginRegistry;
 public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     // TODO: 16/08/22 Change this value on each release.
     @SuppressWarnings("FieldCanBeLocal")
-    private final String PLUGIN_VERSION = "1.1.2";
+    private final String PLUGIN_VERSION = "1.1.3";
     private final String TAG = "BlueshiftFlutter";
     private Activity appActivity;
     private Context appContext;
