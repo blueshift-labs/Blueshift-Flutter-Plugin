@@ -39,6 +39,7 @@ public class BlueshiftFlutterRegistrar {
     private static final String DEVICE_ID_SOURCE = PREFIX + "DEVICE_ID_SOURCE";
     private static final String CUSTOM_DEVICE_ID = PREFIX + "CUSTOM_DEVICE_ID";
     private static final String LOG_LEVEL = PREFIX + "LOG_LEVEL";
+    private static final String ENCRYPT_USER_INFO = PREFIX + "ENCRYPT_USER_INFO";
 
     private static void enableSdkLogging(String logLevel) {
         if (logLevel != null) {
@@ -175,6 +176,9 @@ public class BlueshiftFlutterRegistrar {
                 if (customDeviceId != null) {
                     config.setCustomDeviceId(customDeviceId);
                 }
+
+                boolean encryptUserInfo = metaData.getBoolean(ENCRYPT_USER_INFO, false);
+                config.setSaveUserInfoAsEncrypted(encryptUserInfo);
 
                 Blueshift.getInstance(context).initialize(config);
             } else {

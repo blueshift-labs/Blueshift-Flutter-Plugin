@@ -34,6 +34,10 @@ android {
     }
 
     dependencies {
-        implementation 'com.blueshift:android-sdk-x:3.4.6'
+        implementation 'com.blueshift:android-sdk-x:3.5.1'
+        implementation 'com.google.code.gson:gson:2.10.1'
+        implementation 'com.google.firebase:firebase-messaging:20.3.0'
     }
+
+    namespace 'com.blueshift.flutter.blueshift_plugin'
 }
