@@ -101,6 +101,9 @@
         <meta-data
             android:name="com.blueshift.config.DEVICE_ID_SOURCE"
             android:value="GUID" />
+        <meta-data
+          android:name="com.blueshift.config.ENCRYPT_USER_INFO"
+          android:value="true" />
 <!--        <meta-data-->
 <!--            android:name="com.blueshift.config.CUSTOM_DEVICE_ID"-->
 <!--            android:value="YOUR_CUSTOM_DEVICE_ID" />-->
