@@ -4,7 +4,6 @@ use_frameworks!
 use_modular_headers!
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
-$bsftLocalPath = '/Users/ketanshikhare/Documents/Blueshift-Repository/Blueshift-iOS-SDK'
 
 project 'Runner', {
   'Debug' => :debug,
