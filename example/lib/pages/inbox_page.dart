@@ -19,24 +19,24 @@ class InboxPage extends StatelessWidget {
           ),
         ),
         body: BlueshiftInbox(
-          // titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-          // detailsTextStyle: Theme.of(context).textTheme.bodyMedium,
-          // dateTextStyle: Theme.of(context).textTheme.bodySmall,
-          // unreadIndicatorColor: Colors.red,
-          // dividerColor: Colors.blueGrey,
-          // dateFormatter: (date) => date.toIso8601String(),
-          // sortMessages: (m1, m2) => m2.createdAt.compareTo(m1.createdAt),
-          // placeholder: const Text("Inbox is empty!"),
-          // loadingIndicator: const Icon(Icons.hourglass_top),
-          // inboxItem: (msg) => Column(
-          //   crossAxisAlignment: CrossAxisAlignment.stretch,
-          //   children: [
-          //     Text(msg.title.trim()),
-          //     Text(msg.details),
-          //     Text(msg.imageUrl),
-          //   ],
-          // ),
-        ),
+            // titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+            // detailsTextStyle: Theme.of(context).textTheme.bodyMedium,
+            // dateTextStyle: Theme.of(context).textTheme.bodySmall,
+            // unreadIndicatorColor: Colors.red,
+            // dividerColor: Colors.blueGrey,
+            // dateFormatter: (date) => date.toIso8601String(),
+            // sortMessages: (m1, m2) => m2.createdAt.compareTo(m1.createdAt),
+            // placeholder: const Text("Inbox is empty!"),
+            // loadingIndicator: const Icon(Icons.hourglass_top),
+            // inboxItem: (msg) => Column(
+            //   crossAxisAlignment: CrossAxisAlignment.stretch,
+            //   children: [
+            //     Text(msg.title.trim()),
+            //     Text(msg.details),
+            //     Text(msg.imageUrl),
+            //   ],
+            // ),
+            ),
       ),
     );
   }
