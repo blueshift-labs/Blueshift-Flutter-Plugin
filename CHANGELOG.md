@@ -1,3 +1,8 @@
+## 1.2.0
+
+- Updated Android SDK version to [3.5.1](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v3.5.1).
+- Updated iOS SDK version to [2.5.1](https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases/tag/2.5.1).
+
 ## 1.1.3
 
 - Updated Android SDK version to [3.4.4](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v3.4.4).
