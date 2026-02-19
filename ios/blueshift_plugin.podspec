@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'BlueShift-iOS-SDK' , '2.5.1'
+  s.dependency 'BlueShift-iOS-SDK' , '2.6.0'
   s.platform = :ios, '10.0'
 end
