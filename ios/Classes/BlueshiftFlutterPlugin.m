@@ -9,6 +9,7 @@
 #import "BlueshiftConstants.h"
 #import "BlueshiftLog.h"
 #import "BlueshiftStreamHandler.h"
+#import "InAppNotificationEntity.h"
 
 @interface BlueshiftFlutterPlugin()
     @property BlueshiftStreamHandler *deeplinkStreamHandler;
@@ -70,6 +71,8 @@
       [self trackCustomEvent:call];
   } else if ([@"trackScreenView" isEqualToString:call.method]) {
       [self trackScreenView:call];
+  } else if ([@"trackInAppMessageView" isEqualToString:call.method]) {
+      [self trackInAppMessageView:call];
   } else if ([@"requestPushNotificationPermission" isEqualToString:call.method]) {
       [self registerForRemoteNotification];
   } else if ([@"registerForInAppMessage" isEqualToString:call.method]) {
@@ -217,6 +220,33 @@
 
 - (void)unregisterForInAppMessage {
     [[BlueShift sharedInstance] unregisterForInAppMessage];
+}
+
+- (void)trackInAppMessageView:(FlutterMethodCall*)call {
+    NSDictionary *messageMap = call.arguments[@"message"];
+    if ([messageMap isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"[BlueshiftFlutter] trackInAppMessageView called with message: %@", messageMap);
+        
+        // Create BlueshiftInboxMessage from the dictionary
+        BlueshiftInboxMessage *inboxMessage = [[BlueshiftInboxMessage alloc] initWithDictionary:messageMap];
+        
+        if (inboxMessage) {
+            // 1. Mark message as read in database (Core Data)
+            [InAppNotificationEntity markMessageAsRead:inboxMessage.messageUUID];
+            NSLog(@"[BlueshiftFlutter] Message marked as read in database: %@", inboxMessage.messageUUID);
+            
+            // 2. Track the in-app notification showing event (analytics tracking)
+            // This sends the "open" tracking event to /track endpoint with opened_by = "user"
+            [[BlueShift sharedInstance] trackInAppNotificationShowingWithParameter:inboxMessage.messagePayload canBacthThisEvent:NO];
+            NSLog(@"[BlueshiftFlutter] Open tracking event sent for message: %@", inboxMessage.messageUUID);
+            
+            NSLog(@"[BlueshiftFlutter] trackInAppMessageView completed successfully");
+        } else {
+            NSLog(@"[BlueshiftFlutter] Failed to create BlueshiftInboxMessage from provided data.");
+        }
+    } else {
+        NSLog(@"[BlueshiftFlutter] Cannot track in-app message view without message data.");
+    }
 }
 
 - (void)fetchInAppNotification {
