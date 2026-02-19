@@ -98,16 +98,16 @@ public class BlueshiftFlutterRegistrar {
                 if (inAppIntervalSeconds > 0) config.setInAppInterval(inAppIntervalSeconds * 1000L);
 
                 long batchIntervalSeconds = metaData.getInt(BATCH_INTERVAL, 0);
-                if (inAppIntervalSeconds > 0) config.setBatchInterval(batchIntervalSeconds * 1000L);
+                if (batchIntervalSeconds > 0) config.setBatchInterval(batchIntervalSeconds * 1000L);
 
                 int notificationIconSmall = metaData.getInt(NOTIFICATION_ICON_SMALL, 0);
-                if (inAppIntervalSeconds > 0) config.setSmallIconResId(notificationIconSmall);
+                if (notificationIconSmall > 0) config.setSmallIconResId(notificationIconSmall);
 
                 int notificationIconBig = metaData.getInt(NOTIFICATION_ICON_BIG, 0);
-                if (inAppIntervalSeconds > 0) config.setSmallIconResId(notificationIconBig);
+                if (notificationIconBig > 0) config.setLargeIconResId(notificationIconBig);
 
                 int notificationIconColor = metaData.getInt(NOTIFICATION_ICON_COLOR, 0);
-                if (inAppIntervalSeconds > 0) {
+                if (notificationIconColor > 0) {
                     try {
                         int color = ContextCompat.getColor(context, notificationIconColor);
                         config.setNotificationColor(color);
