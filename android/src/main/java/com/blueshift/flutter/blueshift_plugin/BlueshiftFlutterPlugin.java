@@ -21,13 +21,17 @@ import com.blueshift.BlueshiftLogger;
 import com.blueshift.BuildConfig;
 import com.blueshift.fcm.BlueshiftMessagingService;
 import com.blueshift.inappmessage.InAppManager;
+import com.blueshift.inappmessage.InAppMessage;
+import com.blueshift.inappmessage.InAppMessageStore;
 import com.blueshift.inbox.BlueshiftInboxManager;
 import com.blueshift.inbox.BlueshiftInboxMessage;
+import com.blueshift.inbox.BlueshiftInboxStoreSQLite;
 import com.blueshift.model.UserInfo;
 import com.blueshift.rich_push.RichPushConstants;
 import com.blueshift.util.DeviceUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -263,6 +267,9 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
             case "trackScreenView":
                 trackScreenView(call);
                 break;
+            case "trackInAppMessageView":
+                trackInAppMessageView(call);
+                break;
             case "registerForRemoteNotification":
                 registerForRemoteNotification();
                 break;
@@ -440,6 +447,76 @@ public class BlueshiftFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         String screenName = methodCall.argument("screenName");
         boolean isBatch = Boolean.TRUE.equals(methodCall.argument("isBatch"));
         Blueshift.getInstance(appContext).trackScreenView(screenName, isBatch);
+    }
+
+    private void trackInAppMessageView(MethodCall methodCall) {
+        HashMap<String, Object> messageMap = methodCall.argument("message");
+        if (messageMap != null) {
+            try {
+                // Log the entire message for debugging
+                BlueshiftLogger.d(TAG, "trackInAppMessageView called with message: " + messageMap.toString());
+                
+                // Extract the data field from BlueshiftInboxMessage
+                Object dataObject = messageMap.get("data");
+                if (dataObject instanceof HashMap) {
+                    HashMap<String, Object> dataMap = (HashMap<String, Object>) dataObject;
+                    
+                    // Log the data field for debugging
+                    BlueshiftLogger.d(TAG, "Extracted data field: " + dataMap.toString());
+                    
+                    // Convert data HashMap to JSONObject for InAppMessage.getInstance
+                    JSONObject jsonObject = new JSONObject(dataMap);
+                    
+                    // Log the JSONObject for debugging
+                    BlueshiftLogger.d(TAG, "Created JSONObject: " + jsonObject.toString());
+                    
+                    // Create InAppMessage instance using getInstance method
+                    InAppMessage inAppMessage = InAppMessage.getInstance(jsonObject);
+                    
+                    if (inAppMessage != null) {
+                        BlueshiftLogger.d(TAG, "Successfully created InAppMessage, calling trackInAppMessageView");
+                        
+                        // Set the OpenedBy field to prevent null pointer exception
+                        // Since this is being called from Flutter (user action), we set it to user
+                        inAppMessage.setOpenedBy(InAppMessage.OpenedBy.user);
+                        
+                        // Track the in-app message view event
+                        Blueshift.getInstance(appContext).trackInAppMessageView(inAppMessage);
+                        
+                        // Mark the message as displayed and read in local storage
+                        markAsDisplayed(inAppMessage);
+                        BlueshiftInboxManager.notifyMessageRead(appContext, inAppMessage.getMessageUuid());
+                        
+                        BlueshiftLogger.d(TAG, "trackInAppMessageView completed successfully");
+                    } else {
+                        BlueshiftLogger.w(TAG, "Failed to create InAppMessage from provided data. JSONObject: " + jsonObject.toString());
+                    }
+                } else {
+                    BlueshiftLogger.w(TAG, "Data field is missing or invalid in the message. Data object type: " +
+                        (dataObject != null ? dataObject.getClass().getSimpleName() : "null"));
+                }
+            } catch (Exception e) {
+                BlueshiftLogger.e(TAG, "Error creating InAppMessage: " + e.getMessage());
+                BlueshiftLogger.e(TAG, e);
+            }
+        } else {
+            BlueshiftLogger.w(TAG, "Cannot track in-app message view without message data.");
+        }
+    }
+
+    private void markAsDisplayed(final InAppMessage inAppMessage) {
+        BlueshiftExecutor.getInstance().runOnDiskIOThread(() -> {
+            if (inAppMessage != null && appContext != null) {
+                inAppMessage.setDisplayedAt(System.currentTimeMillis());
+                InAppMessageStore store = InAppMessageStore.getInstance(appContext);
+                if (store != null) {
+                    store.update(inAppMessage);
+                }
+                
+                BlueshiftInboxStoreSQLite.getInstance(appContext).markMessageAsRead(inAppMessage.getMessageUuid());
+                BlueshiftLogger.d(TAG, "Message marked as displayed and read: " + inAppMessage.getMessageUuid());
+            }
+        });
     }
 
     private void registerForRemoteNotification() {

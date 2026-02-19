@@ -115,6 +115,20 @@ class Blueshift {
     );
   }
 
+  /// Method to track inbox message view events.
+  ///
+  /// ```dart
+  /// Blueshift.trackInboxReadStatus(inboxMessage);
+  /// ```
+  static Future<void> trackInboxReadStatus(
+    BlueshiftInboxMessage message,
+  ) async {
+    return await _methodChannel.invokeMethod(
+      'trackInAppMessageView',
+      {'message': message.toMap()},
+    );
+  }
+
   /// Sends an identify event to Blueshift, along with extra event data.
   ///
   /// ```dart
