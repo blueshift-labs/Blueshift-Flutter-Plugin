@@ -1,3 +1,9 @@
+## 1.2.1
+- Updated Android SDK to [4.1.0](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v4.1.0)
+- Added inbox read status update without showing InApp
+- Fixed Android SDK init config override issue
+- Updated iOS SDK to [2.6.0](https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases/tag/2.6.0)
+
 ## 1.2.0
 
 - Updated Android SDK version to [3.5.1](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v3.5.1).
