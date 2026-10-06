@@ -36,6 +36,23 @@ class BlueshiftInboxMessage {
           objectId: data["objectId"] ?? "",
         );
 
+  /// Returns the custom metadata attached to this message in the campaign,
+  /// or `null` if the message carries none.
+  ///
+  /// ```dart
+  /// final metadata = message.getMetaData();
+  /// final name = metadata?['name'];
+  /// ```
+  Map<String, dynamic>? getMetaData() {
+    // Android hands over the message's `data` node as is, whereas iOS hands
+    // over the whole message payload, which keeps that node under `data`.
+    final inner = data['data'];
+    final metadata =
+        data['metadata'] ?? (inner is Map ? inner['metadata'] : null);
+
+    return metadata is Map ? Map<String, dynamic>.from(metadata) : null;
+  }
+
   Map<String, dynamic> toMap() {
     int ms = createdAt.millisecondsSinceEpoch;
     double sec = ms / 1000;

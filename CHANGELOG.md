@@ -1,3 +1,8 @@
+## 1.2.2
+- Update Android SDK to [4.2.5](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v4.2.5)
+- Updated iOS SDK to [2.8.2](https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases/tag/2.8.2)
+- Meta Data support for inapp/inbox
+
 ## 1.2.1
 - Updated Android SDK to [4.1.0](https://github.com/blueshift-labs/Blueshift-Android-SDK/releases/tag/v4.1.0)
 - Added inbox read status update without showing InApp
